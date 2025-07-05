@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockchain Terminologies</title>
+    <!-- Tailwind CSS CDN (still needed for some base styles, but custom styles will override) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+
+        /* Consistent spacing for paragraphs, headings, and lists */
+        p {
+            margin-bottom: 1rem; /* Consistent spacing for paragraphs */
+        }
+        ul:not(.space-y-2), ol { /* Target actual content lists, not navigation lists */
+            margin-bottom: 1rem; /* Consistent spacing for lists */
+            padding-left: 1.5rem; /* Indent lists */
+        }
+        ul.list-none .list-item div {
+            margin-bottom: 0; /* Handled by .list-item margin-bottom */
+        }
+        /* Specific overrides for nested lists or elements that already have spacing */
+        ul.list-disc ul.list-disc, ol.list-decimal ul.list-disc {
+            margin-top: 0.5rem; /* Small margin for nested lists */
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 800; /* font-extrabold */
+            color: #6b21a8; /* text-purple-700 */
+            margin-bottom: 2.5rem; /* Consistent spacing */
+            border-bottom: 2px solid #d8b4fe; /* border-b-2 border-purple-300 */
+            padding-bottom: 0.5rem; /* pb-2 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #7e22ce; /* text-purple-600 */
+            margin-top: 2rem; /* Consistent spacing */
+            margin-bottom: 1rem; /* Consistent spacing */
+        }
+        .card {
+            background-color: #ffffff; /* bg-white */
+            padding: 1.5rem; /* p-6 */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+            transition: box-shadow 300ms ease-in-out; /* transition-shadow duration-300 */
+        }
+        .card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* hover:shadow-lg */
+        }
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 1rem; /* Consistent spacing below tables */
+        }
+        table {
+            width: 100%;
+            text-align: left;
+            border-collapse: collapse;
+            border: 1px solid #d1d5db; /* Explicit border for the whole table */
+        }
+        th, td {
+            padding: 0.75rem 1rem; /* py-3 px-4 */
+            border: 1px solid #d1d5db; /* Explicit borders for cells */
+        }
+        th {
+            background-color: #f3e8ff; /* bg-purple-50 */
+            color: #581c87; /* text-purple-800 */
+            font-weight: 500; /* font-medium */
+        }
+        td {
+            color: #374151; /* text-gray-700 */
+        }
+        .list-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 0.5rem; /* Consistent spacing for list items */
+        }
+        .list-icon {
+            color: #9333ea; /* text-purple-500 */
+            margin-right: 0.75rem; /* mr-3 */
+            font-size: 1.25rem; /* text-xl */
+        }
+        /* Styles for tab buttons */
+        .tab-button {
+            display: block;
+            padding: 0.5rem 1rem; /* py-2 px-4 */
+            border-radius: 0.375rem; /* rounded-md */
+            color: #4b5563; /* text-gray-700 */
+            transition: background-color 200ms ease-in-out, color 200ms ease-in-out; /* transition-colors duration-200 */
+            cursor: pointer;
+        }
+        .tab-button:hover {
+            background-color: #f3e8ff; /* hover:bg-purple-100 */
+            color: #7e22ce; /* hover:text-purple-700 */
+        }
+        .active-tab-button {
+            background-color: #7e22ce; /* bg-purple-600 */
+            color: #ffffff; /* text-white */
+        }
+        .active-tab-button:hover {
+            background-color: #6b21a8; /* hover:bg-purple-700 */
+        }
+        /* Hide tab content by default */
+        .tab-content {
+            display: none;
+            margin-bottom: 2.5rem; /* Consistent spacing below each tab section */
+        }
+        /* Ensure active tab content is shown */
+        .tab-content.active {
+            display: block;
+        }
+        pre {
+            background-color: #2d2d2d; /* Dark background for code */
+            color: #f8f8f2; /* Light text for code */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 0.9em;
+            line-height: 1.4;
+            margin-bottom: 1rem; /* Consistent spacing below code blocks */
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-6 shadow-lg">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <h1 class="text-4xl font-extrabold mb-2 md:mb-0">Blockchain Terminologies</h1>
+            <p class="text-lg">A Deep Dive into Web3 Concepts</p>
+        </div>
+    </header>
+
+    <div class="flex flex-1 container mx-auto p-6">
+        <!-- Sidebar Navigation (Tabs) -->
+        <nav class="w-1/4 pr-6 hidden md:block">
+            <div class="bg-white p-6 rounded-lg shadow-md sticky top-6">
+                <h2 class="text-xl font-bold mb-4 text-purple-700">Topics</h2>
+                <ul class="space-y-2" id="tab-buttons">
+                    <li><button class="tab-button active-tab-button" data-tab="web3-ecosystem">1. Web3 Ecosystem</button></li>
+                    <li><button class="tab-button" data-tab="blockchains-explained">2. Blockchains Explained</button></li>
+                    <li><button class="tab-button" data-tab="public-private-keys">3. Public and Private Keys</button></li>
+                    <li><button class="tab-button" data-tab="tokens-vs-coins">4. Tokens vs Coins</button></li>
+                    <li><button class="tab-button" data-tab="burn-and-mint">5. Burn and Mint</button></li>
+                    <li><button class="tab-button" data-tab="pow-pos">6. Proof of Work and Proof of Stake</button></li>
+                    <li><button class="tab-button" data-tab="l1-l2">7. L1 and L2</button></li>
+                    <li><button class="tab-button" data-tab="rollups">8. Rollups</button></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content (Tab Panels) -->
+        <main class="w-full md:w-3/4 bg-white p-8 rounded-lg shadow-xl">
+            <!-- Tab Content: Web3 Ecosystem -->
+            <section id="web3-ecosystem" class="tab-content active">
+                <h2 class="section-title">1. Web3 Ecosystem (IPFS, Chainlink, OpenZeppelin, Alchemy, Etherscan, etc.)</h2>
+                <p>The Web3 ecosystem consists of a wide range of decentralized and developer-focused tools that support the development and functionality of blockchain applications. These tools handle everything from <strong>storage and oracles to development libraries, APIs, and blockchain explorers</strong>.</p>
+                <p>Let’s break down some of the most essential components:</p>
+
+                <h3 class="subsection-title">🔗 IPFS (InterPlanetary File System)</h3>
+                <p>A <strong>decentralized file storage</strong> protocol.</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Unlike traditional cloud storage (e.g., Google Drive), IPFS stores content across a <strong>peer-to-peer network</strong>.</li>
+                    <li>Every file is given a unique <strong>content identifier (CID)</strong> based on its hash.</li>
+                    <li>Widely used in NFT metadata storage and decentralized web applications.</li>
+                </ul>
+                <p class="font-semibold">📌 Use Case:</p>
+                <p>Store images, videos, documents, and metadata for NFTs or dApps in a censorship-resistant and decentralized manner.</p>
+
+                <h3 class="subsection-title">🔗 Chainlink</h3>
+                <p>A <strong>decentralized oracle network</strong>.</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Blockchains can't access real-world data on their own; Chainlink allows smart contracts to securely connect to <strong>external data sources</strong>, <strong>APIs</strong>, and <strong>off-chain computations</strong>.</li>
+                    <li>Ensures <strong>data reliability and trustlessness</strong> by aggregating inputs from multiple oracles.</li>
+                </ul>
+                <p class="font-semibold">📌 Use Case:</p>
+                <p>Smart contracts using Chainlink can get accurate weather, price feeds (like ETH/USD), or sports results.</p>
+
+                <h3 class="subsection-title">🔗 OpenZeppelin</h3>
+                <p>A <strong>security-focused open-source library</strong> for smart contract development.</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Written in <strong>Solidity</strong> and includes implementations of <strong>ERC-20</strong>, <strong>ERC-721</strong>, <strong>Ownable</strong>, <strong>Pausable</strong>, and more.</li>
+                    <li>Maintained by a professional security auditing firm.</li>
+                </ul>
+                <p class="font-semibold">📌 Use Case:</p>
+                <p>Developers use OpenZeppelin contracts as a reliable and secure base for building custom smart contracts.</p>
+
+                <h3 class="subsection-title">🔗 Alchemy</h3>
+                <p>A <strong>blockchain infrastructure platform</strong> that provides:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Node access (similar to Infura)</li>
+                    <li>Developer dashboards</li>
+                    <li>Enhanced APIs</li>
+                    <li>Analytics and debugging tools</li>
+                    <li>Simplifies dApp development by handling RPC, logs, and performance insights.</li>
+                </ul>
+                <p class="font-semibold">📌 Use Case:</p>
+                <p>dApp developers use Alchemy to query blockchain data and send transactions <strong>without running their own full nodes</strong>.</p>
+
+                <h3 class="subsection-title">🔗 Etherscan</h3>
+                <p>A <strong>blockchain explorer</strong> for the Ethereum network.</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Allows users to <strong>track transactions</strong>, <strong>view wallet balances</strong>, <strong>inspect smart contract code</strong>, and more.</li>
+                    <li>Often used for debugging, verifying contract deployments, or viewing token transactions.</li>
+                </ul>
+                <p class="font-semibold">📌 Use Case:</p>
+                <p>A developer can verify a contract's source code and check the status of a transaction on the Ethereum network.</p>
+
+                <h3 class="subsection-title">⚙️ Other Notable Tools:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tool/Service</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Infura</td>
+                                <td>Ethereum node provider; lets dApps interact with Ethereum without running their own node.</td>
+                            </tr>
+                            <tr>
+                                <td>Moralis</td>
+                                <td>Web3 development platform for authentication, real-time events, database syncs.</td>
+                            </tr>
+                            <tr>
+                                <td>The Graph</td>
+                                <td>Indexing protocol that allows dApps to query blockchain data efficiently.</td>
+                            </tr>
+                            <tr>
+                                <td>WalletConnect</td>
+                                <td>Protocol for connecting wallets to dApps securely (cross-platform).</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">✅ Summary:</h3>
+                <p>The <strong>Web3 ecosystem</strong> is made up of specialized tools that solve core problems in blockchain development:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>IPFS</strong> → decentralized storage</li>
+                    <li><strong>Chainlink</strong> → external data/oracles</li>
+                    <li><strong>OpenZeppelin</strong> → secure smart contract templates</li>
+                    <li><strong>Alchemy</strong> → node access and development tools</li>
+                    <li><strong>Etherscan</strong> → blockchain explorer</li>
+                </ul>
+                <p>Each one plays a critical role in building robust, scalable, and secure decentralized applications.</p>
+            </section>
+
+            <!-- Tab Content: Blockchains Explained -->
+            <section id="blockchains-explained" class="tab-content">
+                <h2 class="section-title">2. Ethereum, Polygon, Solana, and Avalanche Explained</h2>
+                <p>These are four of the most popular blockchain platforms in the Web3 space. Each has its own architecture, consensus mechanism, scalability solution, and developer ecosystem.</p>
+
+                <h3 class="subsection-title">🟣 Ethereum</h3>
+                <p><strong>Ethereum</strong> is the <strong>first and most widely-used smart contract platform</strong>, enabling the creation of decentralized applications (dApps) and digital assets through smart contracts.</p>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Consensus</td>
+                                <td>Proof of Stake (Ethereum 2.0 / post-Merge)</td>
+                            </tr>
+                            <tr>
+                                <td>Smart Contracts</td>
+                                <td>Written in Solidity</td>
+                            </tr>
+                            <tr>
+                                <td>Mainnet Fees</td>
+                                <td>High during network congestion (gas fees)</td>
+                            </tr>
+                            <tr>
+                                <td>Security</td>
+                                <td>Very secure and decentralized</td>
+                            </tr>
+                            <tr>
+                                <td>TPS (Transactions/sec)</td>
+                                <td>~15–30 TPS (base layer)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="font-semibold">✅ Strengths:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Largest developer ecosystem</li>
+                    <li>Vast DeFi and NFT infrastructure</li>
+                    <li>Rich tooling (e.g., Hardhat, Truffle, Ethers.js)</li>
+                </ul>
+                <p class="font-semibold">⚠️ Limitations:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Limited scalability at L1</li>
+                    <li>Expensive gas fees during peak usage</li>
+                </ul>
+                <p class="font-semibold">🛠 Scalability Solutions:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>L2s like Arbitrum, Optimism, zkSync</li>
+                </ul>
+
+                <h3 class="subsection-title">🟣 Polygon (Previously Matic Network)</h3>
+                <p><strong>Polygon</strong> is a <strong>Layer 2 scaling solution</strong> and sidechain for Ethereum, designed to make transactions faster and cheaper.</p>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Consensus</td>
+                                <td>Proof of Stake (Plasma + Heimdall architecture)</td>
+                            </tr>
+                            <tr>
+                                <td>Smart Contracts</td>
+                                <td>Compatible with Ethereum (Solidity)</td>
+                            </tr>
+                            <tr>
+                                <td>TPS</td>
+                                <td>~7,000 TPS (on PoS chain)</td>
+                            </tr>
+                            <tr>
+                                <td>EVM-Compatible</td>
+                                <td>Yes</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="font-semibold">✅ Strengths:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Ultra-low fees</li>
+                    <li>Fast transaction finality</li>
+                    <li>Easy migration from Ethereum</li>
+                </ul>
+                <p class="font-semibold">⚠️ Limitations:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Sidechain security depends partially on its own validator set (not Ethereum L1)</li>
+                    <li>Potential trade-off between decentralization and speed</li>
+                </ul>
+                <p class="font-semibold">💡 Use Case:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>NFT marketplaces (e.g., Lens Protocol)</li>
+                    <li>Low-cost DeFi</li>
+                </ul>
+
+                <h3 class="subsection-title">🟡 Solana</h3>
+                <p><strong>Solana</strong> is a <strong>high-performance Layer 1 blockchain</strong> known for speed and scalability, built using a unique consensus model.</p>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Consensus</td>
+                                <td>Proof of History (PoH) + Proof of Stake (PoS)</td>
+                            </tr>
+                            <tr>
+                                <td>Smart Contracts</td>
+                                <td>Written in Rust, C, C++</td>
+                            </tr>
+                            <tr>
+                                <td>TPS</td>
+                                <td>65,000+ TPS (theoretical)</td>
+                            </tr>
+                            <tr>
+                                <td>EVM-Compatible</td>
+                                <td>No (non-EVM chain)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="font-semibold">✅ Strengths:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Extremely fast and cheap</li>
+                    <li>High throughput for real-time dApps and games</li>
+                </ul>
+                <p class="font-semibold">⚠️ Limitations:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Network instability and outages (historically)</li>
+                    <li>Smaller developer ecosystem compared to Ethereum</li>
+                    <li>Steeper learning curve (Rust-based development)</li>
+                </ul>
+                <p class="font-semibold">💡 Use Case:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>GameFi, real-time dApps, high-frequency DeFi</li>
+                </ul>
+
+                <h3 class="subsection-title">🔴 Avalanche</h3>
+                <p><strong>Avalanche</strong> is a <strong>high-speed Layer 1 blockchain</strong> designed for scalability and customization with support for multiple chains (Subnet architecture).</p>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Consensus</td>
+                                <td>Avalanche Consensus + Snowman protocol</td>
+                            </tr>
+                            <tr>
+                                <td>Smart Contracts</td>
+                                <td>Solidity (EVM-compatible)</td>
+                            </tr>
+                            <tr>
+                                <td>TPS</td>
+                                <td>4,500 TPS+</td>
+                            </tr>
+                            <tr>
+                                <td>Unique Feature</td>
+                                <td>Subnets (customizable blockchains)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="font-semibold">✅ Strengths:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Highly scalable without sacrificing security</li>
+                    <li>Custom blockchains (Subnets) for enterprises and games</li>
+                    <li>Low transaction fees</li>
+                </ul>
+                <p class="font-semibold">⚠️ Limitations:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Less adoption compared to Ethereum</li>
+                    <li>Subnet complexity for newcomers</li>
+                </ul>
+                <p class="font-semibold">💡 Use Case:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Institutional DeFi, NFT games, enterprise chains</li>
+                </ul>
+
+                <h3 class="subsection-title">🧠 Comparison Summary Table:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Ethereum</th>
+                                <th>Polygon</th>
+                                <th>Solana</th>
+                                <th>Avalanche</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Type</td>
+                                <td>Layer 1</td>
+                                <td>Layer 2 / Sidechain</td>
+                                <td>Layer 1</td>
+                                <td>Layer 1</td>
+                            </tr>
+                            <tr>
+                                <td>Consensus</td>
+                                <td>PoS</td>
+                                <td>PoS + Plasma</td>
+                                <td>PoH + PoS</td>
+                                <td>Avalanche Consensus</td>
+                            </tr>
+                            <tr>
+                                <td>Language</td>
+                                <td>Solidity</td>
+                                <td>Solidity</td>
+                                <td>Rust</td>
+                                <td>Solidity</td>
+                            </tr>
+                            <tr>
+                                <td>TPS</td>
+                                <td>15–30</td>
+                                <td>~7,000</td>
+                                <td>65,000+</td>
+                                <td>~4,500+</td>
+                            </tr>
+                            <tr>
+                                <td>EVM Compatible</td>
+                                <td>Yes</td>
+                                <td>Yes</td>
+                                <td>No</td>
+                                <td>Yes</td>
+                            </tr>
+                            <tr>
+                                <td>Fees</td>
+                                <td>High</td>
+                                <td>Low</td>
+                                <td>Very Low</td>
+                                <td>Low</td>
+                            </tr>
+                            <tr>
+                                <td>Use Cases</td>
+                                <td>General purpose</td>
+                                <td>Scalable dApps</td>
+                                <td>Gaming/DeFi</td>
+                                <td>Custom blockchains</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Tab Content: Public and Private Keys -->
+            <section id="public-private-keys" class="tab-content">
+                <h2 class="section-title">3. Public and Private Keys – How They Work Together</h2>
+                <p>In blockchain systems, <strong>public and private keys</strong> are at the core of cryptographic security. They are used to create <strong>wallets</strong>, sign transactions, and verify ownership of cryptocurrencies or digital assets.</p>
+
+                <h3 class="subsection-title">🔑 What Is a Key Pair?</h3>
+                <p>A <strong>key pair</strong> consists of:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>Private Key:</strong> A secret number used to <strong>sign</strong> transactions and prove ownership.</li>
+                    <li><strong>Public Key:</strong> A derived number from the private key that others can use to <strong>verify</strong> the signature or send assets to you.</li>
+                </ul>
+                <p>They are mathematically linked through cryptographic functions like <strong>Elliptic Curve Cryptography (ECC)</strong>.</p>
+
+                <h3 class="subsection-title">🧠 How They Work Together:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Operation</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Create Wallet</td>
+                                <td>When you generate a wallet, it creates a private key and derives the public key and address from it.</td>
+                            </tr>
+                            <tr>
+                                <td>Send Assets</td>
+                                <td>You use your <strong>private key</strong> to sign a transaction. This proves that you own the assets.</td>
+                            </tr>
+                            <tr>
+                                <td>Receive Assets</td>
+                                <td>Others can use your <strong>public key (or wallet address)</strong> to send you tokens or assets.</td>
+                            </tr>
+                            <tr>
+                                <td>Verify Ownership</td>
+                                <td>Anyone can verify that a message or transaction was signed by your private key using your public key.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">🔐 Example Flow:</h3>
+                <p>You generate a wallet:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Private Key: 0xABCD...1234</li>
+                    <li>Public Key: 0x7890...DEFG</li>
+                    <li>Wallet Address (hash of public key): 0x9e4F...</li>
+                </ul>
+                <p>You want to send 1 ETH:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>You <strong>sign</strong> the transaction with your private key.</li>
+                    <li>The network uses your public key to <strong>verify</strong> it’s authentic.</li>
+                    <li>ETH is transferred from your address to the recipient.</li>
+                </ul>
+
+                <h3 class="subsection-title">⚠️ Important Notes:</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>Never share your private key</strong>. Anyone with it can control your funds.</li>
+                    <li>Your public key/address can be shared with anyone.</li>
+                    <li>Losing your private key = losing access to your wallet and assets.</li>
+                    <li>Many wallets use <strong>mnemonic phrases</strong> (12 or 24 words) to back up the private key securely.</li>
+                </ul>
+
+                <h3 class="subsection-title">📌 Analogy:</h3>
+                <p>Think of your <strong>public key</strong> as your <strong>email address</strong> – people can send messages (tokens) to you.</p>
+                <p>Your <strong>private key</strong> is like your <strong>email password</strong> – only you use it to log in (send transactions). If someone steals your password, they can control your inbox – just like stealing your funds with the private key.</p>
+            </section>
+
+            <!-- Tab Content: Tokens vs Coins -->
+            <section id="tokens-vs-coins" class="tab-content">
+                <h2 class="section-title">4. Tokens vs Coins – What’s the Difference?</h2>
+                <p>Although “tokens” and “coins” are often used interchangeably in the crypto space, they represent <strong>two distinct types</strong> of digital assets on a blockchain. Understanding the difference helps clarify <strong>how digital assets are created, used, and classified</strong> in Web3.</p>
+
+                <h3 class="subsection-title">🪙 What Is a Coin?</h3>
+                <p>A <strong>coin</strong> is a <strong>native digital currency</strong> that operates on its <strong>own blockchain</strong>. Coins are typically used as:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Medium of exchange</li>
+                    <li>Store of value</li>
+                    <li>Unit of account</li>
+                    <li>To pay gas fees on the network</li>
+                </ul>
+                <p class="font-semibold">✅ Examples of Coins:</p>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Coin</th>
+                                <th>Blockchain</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Bitcoin (BTC)</td>
+                                <td>Bitcoin</td>
+                            </tr>
+                            <tr>
+                                <td>Ether (ETH)</td>
+                                <td>Ethereum</td>
+                            </tr>
+                            <tr>
+                                <td>BNB</td>
+                                <td>BNB Chain (formerly Binance Smart Chain)</td>
+                            </tr>
+                            <tr>
+                                <td>SOL</td>
+                                <td>Solana</td>
+                            </tr>
+                            <tr>
+                                <td>AVAX</td>
+                                <td>Avalanche</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="font-semibold">📌 Key Point:</p>
+                <p>If it runs on <strong>its own independent blockchain</strong>, it’s a <strong>coin</strong>.</p>
+
+                <h3 class="subsection-title">🏷️ What Is a Token?</h3>
+                <p>A <strong>token</strong> is a digital asset that is <strong>created and hosted on an existing blockchain</strong> (like Ethereum or Solana). Tokens <strong>do not have their own blockchain</strong>, but instead rely on the infrastructure of another chain.</p>
+                <p>Tokens can be used for:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Payments</li>
+                    <li>Governance</li>
+                    <li>Utility</li>
+                    <li>Access rights</li>
+                    <li>Representing assets (e.g., NFTs or stablecoins)</li>
+                </ul>
+                <p class="font-semibold">✅ Examples of Tokens:</p>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Token</th>
+                                <th>Runs On</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>USDT (Tether)</td>
+                                <td>Ethereum, Tron, etc.</td>
+                                <td>Stablecoin</td>
+                            </tr>
+                            <tr>
+                                <td>UNI (Uniswap)</td>
+                                <td>Ethereum</td>
+                                <td>Governance</td>
+                            </tr>
+                            <tr>
+                                <td>LINK (Chainlink)</td>
+                                <td>Ethereum</td>
+                                <td>Oracle utility</td>
+                            </tr>
+                            <tr>
+                                <td>MATIC (ERC-20)</td>
+                                <td>Ethereum → Now a Coin on Polygon PoS</td>
+                                <td>Gas & utility</td>
+                            </tr>
+                            <tr>
+                                <td>APE (ApeCoin)</td>
+                                <td>Ethereum</td>
+                                <td>Governance/Utility</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="font-semibold">📌 Key Point:</p>
+                <p>If it is <strong>built on top of another blockchain</strong>, it’s a <strong>token</strong>.</p>
+
+                <h3 class="subsection-title">🔄 Summary Table:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Coins</th>
+                                <th>Tokens</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Blockchain</td>
+                                <td>Native to its own chain</td>
+                                <td>Built on an existing blockchain</td>
+                            </tr>
+                            <tr>
+                                <td>Examples</td>
+                                <td>BTC, ETH, SOL, AVAX</td>
+                                <td>USDT, UNI, LINK, AAVE</td>
+                            </tr>
+                            <tr>
+                                <td>Usage</td>
+                                <td>Gas fees, base currency</td>
+                                <td>DeFi, governance, utility, NFTs</td>
+                            </tr>
+                            <tr>
+                                <td>Creation</td>
+                                <td>Requires building a blockchain</td>
+                                <td>Created via smart contracts</td>
+                            </tr>
+                            <tr>
+                                <td>Transfer Fee Paid In</td>
+                                <td>The coin itself (e.g., ETH)</td>
+                                <td>The native coin of the hosting chain (e.g., ETH)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">🧠 Real-World Analogy:</h3>
+                <p><strong>Coin</strong> = National Currency (e.g., USD, EUR) — it’s the default and base currency of a region (blockchain).</p>
+                <p><strong>Token</strong> = Gift Card or Coupon — it operates within the larger economy but is issued for a specific purpose by a business (dApp, protocol).</p>
+            </section>
+
+            <!-- Tab Content: Burn and Mint -->
+            <section id="burn-and-mint" class="tab-content">
+                <h2 class="section-title">5. What Do “Burn” and “Mint” Mean in Blockchain?</h2>
+                <p>In blockchain, <strong>burning</strong> and <strong>minting</strong> refer to the <strong>removal</strong> and <strong>creation</strong> of digital tokens or coins. These actions directly affect the <strong>total supply</strong> of an asset and are fundamental in tokenomics (token economics).</p>
+
+                <h3 class="subsection-title">🧱 Minting</h3>
+                <p><strong>Minting</strong> is the process of <strong>creating new tokens or coins</strong> and adding them to circulation.</p>
+                <p class="font-semibold">🔹 How it works:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Done via <strong>smart contracts</strong> or blockchain protocols.</li>
+                    <li>Common in initial coin offerings (ICOs), staking rewards, NFT creation, etc.</li>
+                </ul>
+                <p class="font-semibold">✅ Examples:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Minting 10,000 new tokens for a DAO treasury.</li>
+                    <li>Creating a new NFT (image, metadata) and registering it on-chain.</li>
+                    <li>Ethereum block rewards (in Proof-of-Work era) were minted to miners.</li>
+                </ul>
+                <p class="font-semibold">🧠 Real-world analogy:</p>
+                <p>Minting is like a <strong>central bank printing new money</strong>.</p>
+
+                <h3 class="subsection-title">🔥 Burning</h3>
+                <p><strong>Burning</strong> is the process of <strong>permanently removing tokens or coins</strong> from circulation, reducing total supply.</p>
+                <p class="font-semibold">🔹 How it works:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Tokens are sent to a <strong>burn address</strong> (a wallet no one can access, e.g., 0x000...dead).</li>
+                    <li>Alternatively, a burn function in a smart contract marks them as non-spendable.</li>
+                </ul>
+                <p class="font-semibold">✅ Examples:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>A DeFi protocol may burn a portion of transaction fees (e.g., 0.1% of every trade).</li>
+                    <li>Ethereum burns a base portion of gas fees in EIP-1559 (post-London hard fork).</li>
+                    <li>Token buybacks + burns are used to reduce supply and increase scarcity.</li>
+                </ul>
+                <p class="font-semibold">🧠 Real-world analogy:</p>
+                <p>Burning is like <strong>shredding money</strong> – it's intentionally destroyed and taken out of the system.</p>
+
+                <h3 class="subsection-title">📈 Why Mint and Burn?</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Action</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Mint</td>
+                                <td>Increase supply, reward users, bootstrap ecosystems</td>
+                            </tr>
+                            <tr>
+                                <td>Burn</td>
+                                <td>Reduce inflation, control supply, increase scarcity</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>Some tokens have <strong>mint + burn mechanisms</strong> to maintain balance (e.g., algorithmic stablecoins or rebasing tokens).</p>
+
+                <h3 class="subsection-title">🔧 Code Snippet (Solidity Example):</h3>
+                <pre><code>
+// Mint function
+mint(address _to, uint256 _amount) public onlyOwner {
+    _mint(_to, _amount);
+}
+
+// Burn function
+burn(uint256 _amount) public {
+    _burn(msg.sender, _amount);
+}
+</code></pre>
+                <h3 class="subsection-title">✅ Summary:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Term</th>
+                                <th>Meaning</th>
+                                <th>Common Use Cases</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Mint</td>
+                                <td>Create new tokens</td>
+                                <td>Rewards, NFT creation, new supply</td>
+                            </tr>
+                            <tr>
+                                <td>Burn</td>
+                                <td>Destroy tokens permanently</td>
+                                <td>Supply control, scarcity, fee burns</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>These actions are <strong>programmable and transparent</strong> on-chain, making supply management more efficient than traditional finance.</p>
+            </section>
+
+            <!-- Tab Content: Proof of Work and Proof of Stake -->
+            <section id="pow-pos" class="tab-content">
+                <h2 class="section-title">6. Proof of Work (PoW) and Proof of Stake (PoS)</h2>
+                <p><strong>Proof of Work (PoW)</strong> and <strong>Proof of Stake (PoS)</strong> are the two most common <strong>consensus mechanisms</strong> in blockchain technology. They determine <strong>how transactions are verified and added to the blockchain</strong>, and how new blocks are created.</p>
+
+                <h3 class="subsection-title">🔒 What Is a Consensus Mechanism?</h3>
+                <p>A <strong>consensus mechanism</strong> is a process used by decentralized networks to <strong>agree on the state of the blockchain</strong>. It prevents fraud (like double spending) and ensures all nodes in the network are synchronized.</p>
+
+                <h3 class="subsection-title">⛏️ Proof of Work (PoW)</h3>
+                <p><strong>PoW</strong> is the original consensus mechanism used by <strong>Bitcoin</strong> and previously by <strong>Ethereum</strong> (before The Merge in 2022).</p>
+                <p class="font-semibold">🔹 How It Works:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Miners compete to solve complex mathematical puzzles.</li>
+                    <li>The first to solve it gets to <strong>add the new block</strong> to the blockchain and <strong>earn a reward</strong>.</li>
+                    <li>Solving the puzzle requires <strong>high computational power</strong> (energy-intensive).</li>
+                </ul>
+                <p class="font-semibold">✅ Advantages:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Highly secure and battle-tested (used by Bitcoin since 2009).</li>
+                    <li>Decentralized and resistant to Sybil attacks.</li>
+                </ul>
+                <p class="font-semibold">❌ Disadvantages:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>Energy-consuming</strong> (requires electricity and hardware).</li>
+                    <li>Slower transaction speeds.</li>
+                    <li>High barrier to entry (cost of mining equipment).</li>
+                </ul>
+                <p class="font-semibold">⛓️ Example:</p>
+                <p>Bitcoin mining – solving SHA-256 puzzles to earn BTC.</p>
+
+                <h3 class="subsection-title">🪙 Proof of Stake (PoS)</h3>
+                <p><strong>PoS</strong> is an alternative mechanism where <strong>validators are chosen to create new blocks based on the amount of cryptocurrency they "stake"</strong> (lock up as collateral).</p>
+                <p class="font-semibold">🔹 How It Works:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Users lock (stake) coins to become validators.</li>
+                    <li>Validators are selected randomly (often weighted by stake amount).</li>
+                    <li>They validate transactions and propose blocks.</li>
+                    <li>Validators earn rewards; misbehavior results in <strong>slashing</strong> (losing stake).</li>
+                </ul>
+                <p class="font-semibold">✅ Advantages:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>Energy-efficient</strong> – no mining required.</li>
+                    <li>Faster transaction finality.</li>
+                    <li>Encourages long-term holding and participation.</li>
+                </ul>
+                <p class="font-semibold">❌ Disadvantages:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Potential centralization (wealthy stakers have more power).</li>
+                    <li>Requires slashing protocols to maintain trust.</li>
+                </ul>
+                <p class="font-semibold">⛓️ Example:</p>
+                <p>Ethereum 2.0 (post-Merge), Solana, Cardano, Avalanche.</p>
+
+                <h3 class="subsection-title">🧠 PoW vs PoS – Comparison Table:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Proof of Work (PoW)</th>
+                                <th>Proof of Stake (PoS)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Block Validators</td>
+                                <td>Miners (computational work)</td>
+                                <td>Validators (stakers)</td>
+                            </tr>
+                            <tr>
+                                <td>Resource Used</td>
+                                <td>Electricity, hardware</td>
+                                <td>Staked crypto</td>
+                            </tr>
+                            <tr>
+                                <td>Speed & Efficiency</td>
+                                <td>Slower, energy-intensive</td>
+                                <td>Faster, energy-efficient</td>
+                            </tr>
+                            <tr>
+                                <td>Security</td>
+                                <td>Very secure</td>
+                                <td>Secure, but still maturing</td>
+                            </tr>
+                            <tr>
+                                <td>Examples</td>
+                                <td>Bitcoin, Litecoin</td>
+                                <td>Ethereum, Solana, Cardano</td>
+                            </tr>
+                            <tr>
+                                <td>Attack Cost</td>
+                                <td>Expensive (hardware + power)</td>
+                                <td>Expensive (buy and stake tokens)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">🌿 The Transition: Ethereum’s Merge</h3>
+                <p><strong>Ethereum</strong> migrated from PoW to PoS in September 2022 to improve scalability, reduce energy consumption (~99.95% drop), and pave the way for future upgrades like sharding.</p>
+
+                <h3 class="subsection-title">🔧 Summary:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mechanism</th>
+                                <th>Description</th>
+                                <th>Main Use</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>PoW</td>
+                                <td>Solve puzzles with computing power</td>
+                                <td>Security via computation</td>
+                            </tr>
+                            <tr>
+                                <td>PoS</td>
+                                <td>Stake coins to earn block validation rights</td>
+                                <td>Security via financial stake</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>Both are <strong>critical to blockchain security</strong>, but the trend is shifting toward PoS for <strong>scalability and sustainability</strong>.</p>
+            </section>
+
+            <!-- Tab Content: L1 and L2 -->
+            <section id="l1-l2" class="tab-content">
+                <h2 class="section-title">7. What Are L1 and L2?</h2>
+                <p><strong>L1 (Layer 1)</strong> and <strong>L2 (Layer 2)</strong> are terms used to describe different layers of blockchain architecture. They help address the <strong>blockchain trilemma</strong>: <strong>scalability</strong>, <strong>security</strong>, and <strong>decentralization</strong>.</p>
+
+                <h3 class="subsection-title">🏗️ Layer 1 (L1) – The Base Blockchain</h3>
+                <p><strong>L1</strong> refers to the <strong>main blockchain network</strong> — the foundational layer where transactions are processed and stored directly on-chain.</p>
+                <p class="font-semibold">🔹 Key Features:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Handles consensus, security, and data availability</li>
+                    <li>Supports native coins (e.g., ETH for Ethereum)</li>
+                    <li>Transactions are final and settled on-chain</li>
+                </ul>
+                <p class="font-semibold">✅ Examples of L1 Blockchains:</p>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Blockchain</th>
+                                <th>Native Coin</th>
+                                <th>Consensus Mechanism</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Ethereum</td>
+                                <td>ETH</td>
+                                <td>Proof of Stake</td>
+                            </tr>
+                            <tr>
+                                <td>Bitcoin</td>
+                                <td>BTC</td>
+                                <td>Proof of Work</td>
+                            </tr>
+                            <tr>
+                                <td>Solana</td>
+                                <td>SOL</td>
+                                <td>Proof of Stake</td>
+                            </tr>
+                            <tr>
+                                <td>Avalanche</td>
+                                <td>AVAX</td>
+                                <td>Avalanche Consensus</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="font-semibold">🧠 Challenges of L1:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Limited throughput (transactions per second)</li>
+                    <li>High gas fees (especially on Ethereum during congestion)</li>
+                    <li>Blockchain bloat (growing data size)</li>
+                </ul>
+
+                <h3 class="subsection-title">🧵 Layer 2 (L2) – Scalability Layer Built on Top of L1</h3>
+                <p><strong>L2</strong> refers to solutions built <strong>on top of L1 blockchains</strong> to improve <strong>scalability and reduce transaction costs</strong>, while still relying on the <strong>security of the base layer</strong>.</p>
+                <p class="font-semibold">🔹 How It Works:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Transactions are processed off the main chain (L1)</li>
+                    <li>Final results (bundled or compressed) are submitted back to L1</li>
+                    <li>This reduces the burden on L1 and lowers costs</li>
+                </ul>
+                <p class="font-semibold">✅ Examples of L2 Solutions:</p>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>L2 Solution</th>
+                                <th>Built On</th>
+                                <th>Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Arbitrum</td>
+                                <td>Ethereum</td>
+                                <td>Optimistic Rollup</td>
+                            </tr>
+                            <tr>
+                                <td>Optimism</td>
+                                <td>Ethereum</td>
+                                <td>Optimistic Rollup</td>
+                            </tr>
+                            <tr>
+                                <td>zkSync</td>
+                                <td>Ethereum</td>
+                                <td>ZK-Rollup</td>
+                            </tr>
+                            <tr>
+                                <td>StarkNet</td>
+                                <td>Ethereum</td>
+                                <td>ZK-Rollup</td>
+                            </tr>
+                            <tr>
+                                <td>Polygon PoS</td>
+                                <td>Ethereum</td>
+                                <td>Sidechain / L2 Hybrid</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">📊 L1 vs L2 – Summary Table:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Layer 1 (L1)</th>
+                                <th>Layer 2 (L2)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Definition</td>
+                                <td>Main blockchain</td>
+                                <td>Scaling solution on top of L1</td>
+                            </tr>
+                            <tr>
+                                <td>Security</td>
+                                <td>Secured by its own consensus</td>
+                                <td>Inherits security from L1</td>
+                            </tr>
+                            <tr>
+                                <td>Speed</td>
+                                <td>Slower</td>
+                                <td>Much faster</td>
+                            </tr>
+                            <tr>
+                                <td>Gas Fees</td>
+                                <td>Higher</td>
+                                <td>Lower</td>
+                            </tr>
+                            <tr>
+                                <td>Examples</td>
+                                <td>Ethereum, Bitcoin, Solana</td>
+                                <td>Arbitrum, Optimism, zkSync</td>
+                            </tr>
+                            <tr>
+                                <td>Use Cases</td>
+                                <td>Final settlement, base logic</td>
+                                <td>Micro-payments, dApps, DeFi, gaming</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">🧠 Real-World Analogy:</h3>
+                <p><strong>L1</strong> = The main road (slower, more traffic, but secure and reliable)</p>
+                <p><strong>L2</strong> = A fast toll highway built above or beside it (offloads traffic, quicker travel, but still relies on the main road for final safety)</p>
+
+                <h3 class="subsection-title">🔧 Bonus: Why Do We Need L2s?</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li>To <strong>scale blockchains</strong> without sacrificing decentralization or security</li>
+                    <li>To enable <strong>mass adoption</strong> of dApps and crypto without congestion</li>
+                    <li>To make DeFi, NFT minting, and gaming <strong>affordable and faster</strong></li>
+                </ul>
+            </section>
+
+            <!-- Tab Content: Rollups -->
+            <section id="rollups" class="tab-content">
+                <h2 class="section-title">8. What Are Rollups in Blockchain?</h2>
+                <p><strong>Rollups</strong> are a type of <strong>Layer 2 (L2) scaling solution</strong> designed to improve the <strong>speed</strong> and <strong>cost-efficiency</strong> of blockchain transactions, especially on networks like <strong>Ethereum</strong>, while still inheriting the <strong>security of the Layer 1 (L1)</strong> blockchain.</p>
+
+                <h3 class="subsection-title">🧵 What Do Rollups Do?</h3>
+                <p><strong>Rollups</strong> "roll up" or bundle multiple transactions into a single batch off-chain, execute them outside the main chain, and then <strong>submit a summary (compressed data)</strong> back to the L1 chain (e.g., Ethereum).</p>
+                <p>This drastically reduces:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Gas fees</li>
+                    <li>Network congestion</li>
+                    <li>On-chain storage</li>
+                </ul>
+
+                <h3 class="subsection-title">🔐 How Are Rollups Secured?</h3>
+                <p>Even though most transaction activity happens <strong>off-chain</strong>, rollups still rely on the <strong>security of the base chain</strong> for final settlement. Data or proofs from the rollup are <strong>posted back to L1</strong>, ensuring transparency and verifiability.</p>
+
+                <h3 class="subsection-title">🧠 Types of Rollups:</h3>
+                <p>There are <strong>two main types</strong> of rollups, based on how they prove that off-chain computations were done correctly:</p>
+
+                <h4 class="text-xl font-medium text-purple-500">1. 🔍 Optimistic Rollups</h4>
+                <p>These rollups assume transactions are <strong>valid by default</strong>, but they allow anyone to <strong>challenge invalid transactions</strong> during a <strong>challenge period</strong>.</p>
+                <p class="font-semibold">✅ Features:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Cheaper and simpler to implement</li>
+                    <li>Fraud proofs are used during challenges</li>
+                    <li>Finality delayed due to dispute window</li>
+                </ul>
+                <p class="font-semibold">🔸 Examples:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Arbitrum</li>
+                    <li>Optimism</li>
+                </ul>
+
+                <h4 class="text-xl font-medium text-purple-500">2. 🧮 Zero-Knowledge (ZK) Rollups</h4>
+                <p>These rollups use <strong>zero-knowledge proofs</strong> (mathematical cryptographic proofs) to show that the transactions are valid <strong>before</strong> they are posted on L1.</p>
+                <p class="font-semibold">✅ Features:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>More secure and faster finality</li>
+                    <li>Generates validity proofs (succinct cryptographic proofs)</li>
+                    <li>Computationally heavy (but improving rapidly)</li>
+                </ul>
+                <p class="font-semibold">🔸 Examples:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>zkSync</li>
+                    <li>StarkNet</li>
+                    <li>Polygon zkEVM</li>
+                </ul>
+
+                <h3 class="subsection-title">⚖️ Rollups vs Other L2s:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Optimistic Rollups</th>
+                                <th>ZK Rollups</th>
+                                <th>Sidechains</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Security</td>
+                                <td>Inherits from L1</td>
+                                <td>Inherits from L1</td>
+                                <td>Independent</td>
+                            </tr>
+                            <tr>
+                                <td>Finality Time</td>
+                                <td>Slower (challenge period)</td>
+                                <td>Faster</td>
+                                <td>Varies</td>
+                            </tr>
+                            <tr>
+                                <td>Proof Type</td>
+                                <td>Fraud proofs</td>
+                                <td>Validity (ZK) proofs</td>
+                                <td>N/A</td>
+                            </tr>
+                            <tr>
+                                <td>Examples</td>
+                                <td>Arbitrum, Optimism</td>
+                                <td>zkSync, StarkNet</td>
+                                <td>Polygon PoS</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">💡 Why Are Rollups Important?</h3>
+                <ul class="list-none">
+                    <li class="list-item"><span class="list-icon">🔗</span> <div>Help Ethereum <strong>scale massively</strong> without compromising decentralization</div></li>
+                    <li class="list-item"><span class="list-icon">💸</span> <div>Lower transaction <strong>costs by 10x–100x</strong></div></li>
+                    <li class="list-item"><span class="list-icon">⚡</span> <div>Enable fast, cheap dApps for <strong>DeFi, NFTs, gaming, payments</strong></div></li>
+                    <li class="list-item"><span class="list-icon">🔐</span> <div>Keep data and state secure by using Ethereum’s base layer</div></li>
+                </ul>
+
+                <h3 class="subsection-title">🧠 Real-World Analogy:</h3>
+                <p>Think of rollups like a <strong>bus ride</strong>:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Each person (transaction) would take their own car (expensive, slow)</li>
+                    <li>Instead, many people get on a bus (rollup), which drops them all off at once (single transaction on L1)</li>
+                </ul>
+
+                <h3 class="subsection-title">✅ Summary:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Term</th>
+                                <th>Explanation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Rollup</td>
+                                <td>Batches many transactions and submits them to L1</td>
+                            </tr>
+                            <tr>
+                                <td>Optimistic</td>
+                                <td>Assumes transactions are valid; uses fraud proofs</td>
+                            </tr>
+                            <tr>
+                                <td>ZK (Zero-Knowledge)</td>
+                                <td>Uses math-based validity proofs to guarantee correctness</td>
+                            </tr>
+                            <tr>
+                                <td>Goal</td>
+                                <td>Scalability with security and lower cost</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white p-6 text-center mt-auto shadow-inner">
+        <p>&copy; 2025 Blockchain Terminologies. All rights reserved.</p>
+        <p class="text-sm mt-2">Created by R.M.N.K. Rathnayake</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabButtonsContainer = document.getElementById('tab-buttons');
+            const tabButtons = tabButtonsContainer.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            // Function to show a specific tab
+            const showTab = (tabId) => {
+                // Hide all tab contents
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                });
+
+                // Deactivate all tab buttons
+                tabButtons.forEach(button => {
+                    button.classList.remove('active-tab-button');
+                    button.classList.add('text-gray-700', 'hover:bg-purple-100', 'hover:text-purple-700');
+                });
+
+                // Show the selected tab content
+                const selectedTabContent = document.getElementById(tabId);
+                if (selectedTabContent) {
+                    selectedTabContent.classList.add('active');
+                }
+
+                // Activate the corresponding tab button
+                const selectedTabButton = document.querySelector(`.tab-button[data-tab="${tabId}"]`);
+                if (selectedTabButton) {
+                    selectedTabButton.classList.add('active-tab-button');
+                    selectedTabButton.classList.remove('text-gray-700', 'hover:bg-purple-100', 'hover:text-purple-700');
+                }
+            };
+
+            // Add click event listeners to tab buttons
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.dataset.tab;
+                    showTab(tabId);
+                });
+            });
+
+            // Show the first tab by default on load
+            if (tabButtons.length > 0) {
+                showTab(tabButtons[0].dataset.tab);
+            }
+        });
+    </script>
+</body>
+</html>

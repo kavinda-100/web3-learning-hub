@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERC Token Standards Overview</title>
+    <!-- Tailwind CSS CDN (still needed for some base styles, but custom styles will override) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+
+        /* Consistent spacing for paragraphs, headings, and lists */
+        p {
+            margin-bottom: 1rem; /* Consistent spacing for paragraphs */
+        }
+        ul:not(.space-y-2), ol { /* Target actual content lists, not navigation lists */
+            margin-bottom: 1rem; /* Consistent spacing for lists */
+            padding-left: 1.5rem; /* Indent lists */
+        }
+        ul.list-none .list-item div {
+            margin-bottom: 0; /* Handled by .list-item margin-bottom */
+        }
+        /* Specific overrides for nested lists or elements that already have spacing */
+        ul.list-disc ul.list-disc, ol.list-decimal ul.list-disc {
+            margin-top: 0.5rem; /* Small margin for nested lists */
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 800; /* font-extrabold */
+            color: #0d9488; /* text-teal-700 */
+            margin-bottom: 2.5rem; /* Consistent spacing */
+            border-bottom: 2px solid #5eead4; /* border-b-2 border-teal-300 */
+            padding-bottom: 0.5rem; /* pb-2 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #0f766e; /* text-teal-600 */
+            margin-top: 2rem; /* Consistent spacing */
+            margin-bottom: 1rem; /* Consistent spacing */
+        }
+        .card {
+            background-color: #ffffff; /* bg-white */
+            padding: 1.5rem; /* p-6 */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+            transition: box-shadow 300ms ease-in-out; /* transition-shadow duration-300 */
+        }
+        .card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* hover:shadow-lg */
+        }
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 1rem; /* Consistent spacing below tables */
+        }
+        table {
+            width: 100%;
+            text-align: left;
+            border-collapse: collapse;
+            border: 1px solid #d1d5db; /* Explicit border for the whole table */
+        }
+        th, td {
+            padding: 0.75rem 1rem; /* py-3 px-4 */
+            border: 1px solid #d1d5db; /* Explicit borders for cells */
+        }
+        th {
+            background-color: #f0fdf4; /* bg-teal-50 */
+            color: #065f46; /* text-teal-800 */
+            font-weight: 500; /* font-medium */
+        }
+        td {
+            color: #374151; /* text-gray-700 */
+        }
+        .list-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 0.5rem; /* Consistent spacing for list items */
+        }
+        .list-icon {
+            color: #14b8a6; /* text-teal-500 */
+            margin-right: 0.75rem; /* mr-3 */
+            font-size: 1.25rem; /* text-xl */
+        }
+        /* Styles for tab buttons */
+        .tab-button {
+            display: block;
+            padding: 0.5rem 1rem; /* py-2 px-4 */
+            border-radius: 0.375rem; /* rounded-md */
+            color: #4b5563; /* text-gray-700 */
+            transition: background-color 200ms ease-in-out, color 200ms ease-in-out; /* transition-colors duration-200 */
+            cursor: pointer;
+        }
+        .tab-button:hover {
+            background-color: #ccfbf1; /* hover:bg-teal-100 */
+            color: #0f766e; /* hover:text-teal-700 */
+        }
+        .active-tab-button {
+            background-color: #0f766e; /* bg-teal-600 */
+            color: #ffffff; /* text-white */
+        }
+        .active-tab-button:hover {
+            background-color: #0d9488; /* hover:bg-teal-700 */
+        }
+        /* Hide tab content by default */
+        .tab-content {
+            display: none;
+            margin-bottom: 2.5rem; /* Consistent spacing below each tab section */
+        }
+        /* Ensure active tab content is shown */
+        .tab-content.active {
+            display: block;
+        }
+        pre {
+            background-color: #2d2d2d; /* Dark background for code */
+            color: #f8f8f2; /* Light text for code */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 0.9em;
+            line-height: 1.4;
+            margin-bottom: 1rem; /* Consistent spacing below code blocks */
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-teal-600 to-green-600 text-white p-6 shadow-lg">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <h1 class="text-4xl font-extrabold mb-2 md:mb-0">ERC Token Standards</h1>
+            <p class="text-lg">Understanding Ethereum's Token Ecosystem</p>
+        </div>
+    </header>
+
+    <div class="flex flex-1 container mx-auto p-6">
+        <!-- Sidebar Navigation (Tabs) -->
+        <nav class="w-1/4 pr-6 hidden md:block">
+            <div class="bg-white p-6 rounded-lg shadow-md sticky top-6">
+                <h2 class="text-xl font-bold mb-4 text-teal-700">Topics</h2>
+                <ul class="space-y-2" id="tab-buttons">
+                    <li><button class="tab-button active-tab-button" data-tab="what-is-eip">1. What Does EIP Mean?</button></li>
+                    <li><button class="tab-button" data-tab="erc-standards">2. ERC-20 and ERC-721</button></li>
+                    <li><button class="tab-button" data-tab="implementation-examples">3. Token Implementation Examples</button></li>
+                    <li><button class="tab-button" data-tab="best-practices">4. Best Practices</button></li>
+                    <li><button class="tab-button" data-tab="appendix">Appendix</button></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content (Tab Panels) -->
+        <main class="w-full md:w-3/4 bg-white p-8 rounded-lg shadow-xl">
+            <!-- Tab Content: What Does EIP Mean? -->
+            <section id="what-is-eip" class="tab-content active">
+                <h2 class="section-title">1. What Does EIP Mean?</h2>
+                <h3 class="subsection-title">📘 Definition:</h3>
+                <p><strong>EIP</strong> stands for <strong>Ethereum Improvement Proposal</strong>. It is a formal document that outlines a <strong>technical standard or feature suggestion</strong> for the Ethereum network. Anyone in the Ethereum community can create an EIP to propose:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>A protocol change</li>
+                    <li>A smart contract standard</li>
+                    <li>A network upgrade</li>
+                    <li>New governance or API methods</li>
+                </ul>
+                <p>Think of it like a “blueprint” for improvements or new functionalities.</p>
+
+                <h3 class="subsection-title">🧱 Types of EIPs:</h3>
+                <p>There are <strong>three primary categories</strong> of EIPs:</p>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>EIP Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Standards Track</td>
+                                <td>Changes affecting the Ethereum protocol or application-level standards (e.g., ERCs like ERC-20)</td>
+                            </tr>
+                            <tr>
+                                <td>Meta</td>
+                                <td>Processes, guidelines, and decision-making (e.g., EIP-1 that defines how EIPs work)</td>
+                            </tr>
+                            <tr>
+                                <td>Informational</td>
+                                <td>General guidelines or information not meant to be enforced</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">🧠 Key Points:</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li>EIPs start as <strong>drafts</strong>, get discussed in the community (GitHub, Ethereum Magicians, etc.), and then may be <strong>accepted and finalized</strong>.</li>
+                    <li>Accepted EIPs that define application-level standards (like tokens) become <strong>ERCs</strong> (Ethereum Request for Comments).</li>
+                </ul>
+            </section>
+
+            <!-- Tab Content: ERC-20 and ERC-721 (and Other ERC Standards) -->
+            <section id="erc-standards" class="tab-content">
+                <h2 class="section-title">2. ERC-20 and ERC-721 (and Other ERC Standards)</h2>
+
+                <h3 class="subsection-title">🔹 What Is an ERC?</h3>
+                <p><strong>ERC</strong> stands for <strong>Ethereum Request for Comments</strong>. These are <strong>application-level standards</strong> based on EIPs and define <strong>how smart contracts should behave</strong> in specific use cases — most commonly, <strong>tokens</strong>.</p>
+
+                <h3 class="subsection-title">🏦 ERC-20: Fungible Token Standard</h3>
+                <p><strong>ERC-20</strong> defines the standard interface for <strong>fungible tokens</strong> — tokens that are <strong>identical and interchangeable</strong> (like USDC, DAI, or your voting power in a DAO).</p>
+                <p class="font-semibold">📦 Real-World Example:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>1 USDC = 1 USDC (no uniqueness)</li>
+                    <li>Ideal for currencies, governance tokens, DeFi assets</li>
+                </ul>
+                <p class="font-semibold">🔧 Core ERC-20 Functions:</p>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Function</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>totalSupply()</code></td>
+                                <td>Returns the total number of tokens in existence</td>
+                            </tr>
+                            <tr>
+                                <td><code>balanceOf(address)</code></td>
+                                <td>Returns the balance of a specific address</td>
+                            </tr>
+                            <tr>
+                                <td><code>transfer(to, amount)</code></td>
+                                <td>Transfers tokens from the caller to another address</td>
+                            </tr>
+                            <tr>
+                                <td><code>approve(spender, amount)</code></td>
+                                <td>Authorizes another address (a dApp, for example) to spend tokens</td>
+                            </tr>
+                            <tr>
+                                <td><code>allowance(owner, spender)</code></td>
+                                <td>Shows how much a spender is allowed to spend from an owner's balance</td>
+                            </tr>
+                            <tr>
+                                <td><code>transferFrom(from, to, amount)</code></td>
+                                <td>Allows a spender to transfer tokens on behalf of an owner (with approval)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="font-semibold">🧠 ERC-20 Events:</p>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Event</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>Transfer</code></td>
+                                <td>Emitted when tokens are moved</td>
+                            </tr>
+                            <tr>
+                                <td><code>Approval</code></td>
+                                <td>Emitted when an allowance is set</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">🖼️ ERC-721: Non-Fungible Token (NFT) Standard</h3>
+                <p><strong>ERC-721</strong> is the standard for <strong>non-fungible tokens</strong> — tokens that are <strong>unique</strong> and <strong>not interchangeable</strong>. Each token has its own ID and metadata.</p>
+                <p class="font-semibold">📦 Real-World Example:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>NFT art, in-game items, virtual land</li>
+                    <li>Token ID #124 ≠ Token ID #125</li>
+                </ul>
+                <p class="font-semibold">🔧 Core ERC-721 Functions:</p>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Function</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>balanceOf(owner)</code></td>
+                                <td>Returns how many NFTs the owner owns</td>
+                            </tr>
+                            <tr>
+                                <td><code>ownerOf(tokenId)</code></td>
+                                <td>Returns who owns a specific NFT</td>
+                            </tr>
+                            <tr>
+                                <td><code>safeTransferFrom(from, to, tokenId)</code></td>
+                                <td>Safely transfers an NFT (checks recipient can receive it)</td>
+                            </tr>
+                            <tr>
+                                <td><code>transferFrom(from, to, tokenId)</code></td>
+                                <td>Transfers an NFT without safety check</td>
+                            </tr>
+                            <tr>
+                                <td><code>approve(to, tokenId)</code></td>
+                                <td>Gives another address permission to transfer a specific NFT</td>
+                            </tr>
+                            <tr>
+                                <td><code>getApproved(tokenId)</code></td>
+                                <td>Returns the approved address for a token</td>
+                            </tr>
+                            <tr>
+                                <td><code>setApprovalForAll(operator, approved)</code></td>
+                                <td>Gives or removes permission for an operator to manage all NFTs</td>
+                            </tr>
+                            <tr>
+                                <td><code>isApprovedForAll(owner, operator)</code></td>
+                                <td>Checks if operator is approved to manage all of owner's NFTs</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="font-semibold">🧠 ERC-721 Events:</p>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Event</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>Transfer</code></td>
+                                <td>Emitted when ownership of an NFT changes</td>
+                            </tr>
+                            <tr>
+                                <td><code>Approval</code></td>
+                                <td>Emitted when an address is approved to manage a specific NFT</td>
+                            </tr>
+                            <tr>
+                                <td><code>ApprovalForAll</code></td>
+                                <td>Emitted when an operator is approved for all tokens</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">📚 Other Important ERC Standards:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ERC</th>
+                                <th>Use Case</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>ERC-1155</td>
+                                <td>Multi-token standard (supports both fungible and non-fungible tokens in one contract)</td>
+                                <td>Gas-efficient for games</td>
+                            </tr>
+                            <tr>
+                                <td>ERC-4626</td>
+                                <td>Tokenized vault standard for DeFi protocols</td>
+                                <td>Used in yield farming, e.g., Yearn Vaults</td>
+                            </tr>
+                            <tr>
+                                <td>ERC-777</td>
+                                <td>Advanced fungible token with hooks</td>
+                                <td>Backward-compatible with ERC-20, less commonly used</td>
+                            </tr>
+                            <tr>
+                                <td>ERC-2981</td>
+                                <td>Royalty standard for NFTs</td>
+                                <td>Specifies how creators get royalties on resales</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">🧠 How These Standards Help Developers:</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>Interoperability:</strong> All wallets, dApps, and block explorers can interact with tokens using the same interface.</li>
+                    <li><strong>Security:</strong> Audited and community-approved structure reduces bugs.</li>
+                    <li><strong>Ecosystem Support:</strong> OpenZeppelin provides libraries that implement these standards securely.</li>
+                </ul>
+
+                <h3 class="subsection-title">✅ Summary Table:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>ERC-20</th>
+                                <th>ERC-721</th>
+                                <th>ERC-1155</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Token Type</td>
+                                <td>Fungible</td>
+                                <td>Non-Fungible (NFT)</td>
+                                <td>Multi-Token (Fungible + NFT)</td>
+                            </tr>
+                            <tr>
+                                <td>Uniqueness</td>
+                                <td>All tokens are identical</td>
+                                <td>Each token is unique</td>
+                                <td>Token IDs can vary by type</td>
+                            </tr>
+                            <tr>
+                                <td>Use Cases</td>
+                                <td>Currencies, DeFi</td>
+                                <td>NFTs, collectibles</td>
+                                <td>Gaming, batch minting</td>
+                            </tr>
+                            <tr>
+                                <td>Libraries</td>
+                                <td>OpenZeppelin ERC-20</td>
+                                <td>OpenZeppelin ERC-721</td>
+                                <td>OpenZeppelin ERC-1155</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Tab Content: Implementation Examples -->
+            <section id="implementation-examples" class="tab-content">
+                <h2 class="section-title">3. Implementation Of ERC-20 and ERC-721 Token Example.</h2>
+                <p>Now go hands-on with <strong>how to implement ERC-20 and ERC-721 tokens using OpenZeppelin</strong>, the most trusted and widely used library in Ethereum smart contract development.</p>
+                <p>We’ll cover:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>✅ ERC-20 Token Implementation</li>
+                    <li>🖼️ ERC-721 (NFT) Token Implementation</li>
+                    <li>🔐 How to Deploy and Interact (basic steps)</li>
+                    <li>🛡️ Best Practices</li>
+                </ul>
+
+                <h3 class="subsection-title">1. ERC-20 Token Code Example:</h3>
+                <pre><code class="language-solidity">
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
+contract MyToken is ERC20 {
+    constructor(uint256 initialSupply) ERC20("MyToken", "MTK") {
+        _mint(msg.sender, initialSupply * 10 ** decimals());
+    }
+}
+                </code></pre>
+                <h3 class="subsection-title">🧠 Key Components:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Line</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>ERC20("MyToken", "MTK")</code></td>
+                                <td>Token name and symbol</td>
+                            </tr>
+                            <tr>
+                                <td><code>_mint(msg.sender, amount)</code></td>
+                                <td>Creates tokens for deployer</td>
+                            </tr>
+                            <tr>
+                                <td><code>decimals()</code></td>
+                                <td>Defaults to 18 (can be overridden)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">2. Implementing an ERC-721 (NFT) Token with OpenZeppelin</h3>
+                <pre><code class="language-solidity">
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
+
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+
+contract MyNFT is ERC721 {
+    using Counters for Counters.Counter;
+    Counters.Counter private _tokenIds;
+
+    constructor() ERC721("MyNFT", "MNFT") {}
+
+    function mintNFT(address recipient) public returns (uint256) {
+        _tokenIds.increment(); // Auto-increment ID
+        uint256 newItemId = _tokenIds.current();
+        _mint(recipient, newItemId); // Mint NFT to recipient
+        return newItemId;
+    }
+}
+                </code></pre>
+                <h3 class="subsection-title">🧠 Key Components:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Element</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>ERC721("MyNFT", "MNFT")</code></td>
+                                <td>Token name and symbol</td>
+                            </tr>
+                            <tr>
+                                <td><code>_tokenIds</code></td>
+                                <td>Tracks current NFT ID</td>
+                            </tr>
+                            <tr>
+                                <td><code>_mint()</code></td>
+                                <td>Mints NFT with unique ID to user</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>🖼️ For metadata (image, description, etc.), you’d typically extend this using <code>ERC721URIStorage</code>.</p>
+            </section>
+
+            <!-- Tab Content: Best Practices -->
+            <section id="best-practices" class="tab-content">
+                <h2 class="section-title">4. Best Practices</h2>
+                <ul class="list-disc list-inside ml-4">
+                    <li>✅ Use OpenZeppelin’s battle-tested contracts</li>
+                    <li>✅ Inherit from <code>ERC20Burnable</code>, <code>Ownable</code>, <code>Pausable</code>, or <code>AccessControl</code> as needed</li>
+                    <li>✅ For NFTs, use <code>ERC721Enumerable</code> for tracking token supply and <code>ERC721URIStorage</code> for metadata</li>
+                    <li>✅ Avoid over-minting or unaudited mint logic</li>
+                    <li>✅ Use <strong>constructor-based minting</strong> or gated mint functions (e.g., <code>onlyOwner</code>)</li>
+                </ul>
+            </section>
+
+            <!-- Tab Content: Appendix -->
+            <section id="appendix" class="tab-content">
+                <h2 class="section-title">Appendix</h2>
+                <ul class="list-disc list-inside ml-4">
+                    <li>ERC-20 reference: <a href="https://ethereum.org/en/developers/docs/standards/tokens/erc-20/" target="_blank" class="text-blue-600 hover:underline">ethereum.org/en/developers/docs/standards/tokens/erc-20/</a></li>
+                    <li><a href="https://eips.ethereum.org/EIPS/eip-20" target="_blank" class="text-blue-600 hover:underline">eips.ethereum.org/EIPS/eip-20</a></li>
+                    <li>Most important one: - <a href="https://docs.openzeppelin.com/contracts/5.x/api/token/erc20" target="_blank" class="text-blue-600 hover:underline">openzeppelin-ERC20</a></li>
+                    <li>ERC-721 reference: <a href="https://docs.openzeppelin.com/contracts/5.x/erc721" target="_blank" class="text-blue-600 hover:underline">docs.openzeppelin.com/contracts/5.x/erc721</a></li>
+                    <li>Most important one: - <a href="https://docs.openzeppelin.com/contracts/5.x/api/token/erc721" target="_blank" class="text-blue-600 hover:underline">openzeppelin-ERC721</a></li>
+                </ul>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white p-6 text-center mt-auto shadow-inner">
+        <p>&copy; 2025 ERC Token Standards. All rights reserved.</p>
+        <p class="text-sm mt-2">Created by R.M.N.K. Rathnayake</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabButtonsContainer = document.getElementById('tab-buttons');
+            const tabButtons = tabButtonsContainer.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            // Function to show a specific tab
+            const showTab = (tabId) => {
+                // Hide all tab contents
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                });
+
+                // Deactivate all tab buttons
+                tabButtons.forEach(button => {
+                    button.classList.remove('active-tab-button');
+                    button.classList.add('text-gray-700', 'hover:bg-teal-100', 'hover:text-teal-700');
+                });
+
+                // Show the selected tab content
+                const selectedTabContent = document.getElementById(tabId);
+                if (selectedTabContent) {
+                    selectedTabContent.classList.add('active');
+                }
+
+                // Activate the corresponding tab button
+                const selectedTabButton = document.querySelector(`.tab-button[data-tab="${tabId}"]`);
+                if (selectedTabButton) {
+                    selectedTabButton.classList.add('active-tab-button');
+                    selectedTabButton.classList.remove('text-gray-700', 'hover:bg-teal-100', 'hover:text-teal-700');
+                }
+            };
+
+            // Add click event listeners to tab buttons
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.dataset.tab;
+                    showTab(tabId);
+                });
+            });
+
+            // Show the first tab by default on load
+            if (tabButtons.length > 0) {
+                showTab(tabButtons[0].dataset.tab);
+            }
+        });
+    </script>
+</body>
+</html>

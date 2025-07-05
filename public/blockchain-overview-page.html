@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockchain Basic: An Interactive Overview</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+        .section-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 800; /* font-extrabold */
+            color: #1d4ed8; /* text-blue-700 */
+            margin-bottom: 2.5rem; /* Consistent spacing */
+            border-bottom: 2px solid #93c5fd; /* border-b-2 border-blue-300 */
+            padding-bottom: 0.5rem; /* pb-2 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #2563eb; /* text-blue-600 */
+            margin-top: 2rem; /* Consistent spacing */
+            margin-bottom: 1rem; /* Consistent spacing */
+        }
+        .card {
+            background-color: #ffffff; /* bg-white */
+            padding: 1.5rem; /* p-6 */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+            transition: box-shadow 300ms ease-in-out; /* transition-shadow duration-300 */
+        }
+        .card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* hover:shadow-lg */
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            text-align: left;
+            border-collapse: collapse;
+            border: 1px solid #d1d5db; /* border border-gray-300 */
+        }
+        th, td {
+            padding: 0.75rem 1rem; /* py-3 px-4 */
+            border: 1px solid #d1d5db; /* border border-gray-300 */
+        }
+        th {
+            background-color: #eff6ff; /* bg-blue-50 */
+            color: #1e40af; /* text-blue-800 */
+            font-weight: 500; /* font-medium */
+        }
+        td {
+            color: #374151; /* text-gray-700 */
+        }
+        .list-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 0.5rem; /* consistent spacing for list items */
+        }
+        .list-icon {
+            color: #3b82f6; /* text-blue-500 */
+            margin-right: 0.75rem; /* mr-3 */
+            font-size: 1.25rem; /* text-xl */
+        }
+        .tab-button {
+            display: block;
+            padding: 0.5rem 1rem; /* py-2 px-4 */
+            border-radius: 0.375rem; /* rounded-md */
+            color: #4b5563; /* text-gray-700 */
+            transition: background-color 200ms ease-in-out, color 200ms ease-in-out; /* transition-colors duration-200 */
+            cursor: pointer;
+        }
+        .tab-button:hover {
+            background-color: #dbeafe; /* hover:bg-blue-100 */
+            color: #2563eb; /* hover:text-blue-700 */
+        }
+        .active-tab-button {
+            background-color: #2563eb; /* bg-blue-600 */
+            color: #ffffff; /* text-white */
+        }
+        .active-tab-button:hover {
+            background-color: #1d4ed8; /* hover:bg-blue-700 */
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        /* General paragraph and list spacing */
+        p {
+            margin-bottom: 1rem; /* Consistent spacing for paragraphs */
+        }
+        ul:not(.list-none):not(.space-y-2), ol { /* Target actual content lists, not nav lists */
+            margin-bottom: 1rem; /* Consistent spacing for lists */
+            padding-left: 1.5rem; /* Indent lists */
+        }
+        ul.list-none .list-item div {
+            margin-bottom: 0; /* Handled by .list-item margin-bottom */
+        }
+        /* Specific overrides for nested lists or elements that already have spacing */
+        ul.list-disc ul.list-disc, ol.list-decimal ul.list-disc {
+            margin-top: 0.5rem; /* Small margin for nested lists */
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 shadow-lg">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <h1 class="text-4xl font-extrabold mb-2 md:mb-0">Blockchain Basic</h1>
+            <p class="text-lg">An Interactive Overview of Web3 and Blockchain Technology</p>
+        </div>
+    </header>
+
+    <div class="flex flex-1 container mx-auto p-6">
+        <!-- Sidebar Navigation (Tabs) -->
+        <nav class="w-1/4 pr-6 hidden md:block">
+            <div class="bg-white p-6 rounded-lg shadow-md sticky top-6">
+                <h2 class="text-xl font-bold mb-4 text-blue-700">Table of Contents</h2>
+                <ul class="space-y-2" id="tab-buttons">
+                    <li><button class="tab-button active-tab-button" data-tab="what-is-blockchain">What is Blockchain?</button></li>
+                    <li><button class="tab-button" data-tab="what-is-web3">What is Web3?</button></li>
+                    <li><button class="tab-button" data-tab="how-blockchain-works">How Does Blockchain Work?</button></li>
+                    <li><button class="tab-button" data-tab="why-blockchain-important">Why is Blockchain Important?</button></li>
+                    <li><button class="tab-button" data-tab="types-of-blockchains">Types of Blockchains</button></li>
+                    <li><button class="tab-button" data-tab="what-is-smart-contract">What is a Smart Contract?</button></li>
+                    <li><button class="tab-button" data-tab="what-is-decentralization">What is Decentralization?</button></li>
+                    <li><button class="tab-button" data-tab="what-is-cryptocurrency">What is a Cryptocurrency?</button></li>
+                    <li><button class="tab-button" data-tab="what-is-wallet">What is a Wallet?</button></li>
+                    <li><button class="tab-button" data-tab="what-are-gas-fees">What Are Gas Fees?</button></li>
+                    <li><button class="tab-button" data-tab="consensus-mechanisms">Consensus Mechanisms</button></li>
+                    <li><button class="tab-button" data-tab="what-is-dapp">What Is a dApp?</button></li>
+                    <li><button class="tab-button" data-tab="what-are-daos">What Are DAOs?</button></li>
+                    <li><button class="tab-button" data-tab="security-in-blockchain">Security in Blockchain</button></li>
+                    <li><button class="tab-button" data-tab="web3-defi">Web3 and DeFi</button></li>
+                    <li><button class="tab-button" data-tab="web3-nfts">Web3 and NFTs</button></li>
+                    <li><button class="tab-button" data-tab="programming-languages">Programming Languages</button></li>
+                    <li><button class="tab-button" data-tab="tools-frameworks">Tools & Frameworks</button></li>
+                    <li><button class="tab-button" data-tab="skillset-career">Skillset & Career</button></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content (Tab Panels) -->
+        <main class="w-full md:w-3/4 bg-white p-8 rounded-lg shadow-xl">
+            <!-- Tab Content: What is Blockchain? -->
+            <section id="what-is-blockchain" class="tab-content active mb-10">
+                <h2 class="section-title">What is Blockchain?</h2>
+                <p>Blockchain is a type of <strong>distributed ledger technology (DLT)</strong> that records transactions in a secure, transparent, and tamper-resistant way across a network of computers. Instead of relying on a central authority (like a bank or government), blockchain uses <strong>cryptographic techniques</strong> and a <strong>peer-to-peer (P2P) network</strong> to validate and store data.</p>
+
+                <h3 class="subsection-title">🔑 Key Characteristics of Blockchain:</h3>
+                <ul class="list-none">
+                    <li class="list-item"><span class="list-icon">▪</span> <div><strong>Decentralized:</strong> No single entity controls the data. Instead, all participants (nodes) in the network maintain a copy of the entire blockchain.</div></li>
+                    <li class="list-item"><span class="list-icon">▪</span> <div><strong>Immutable:</strong> Once data is recorded on the blockchain, it cannot be altered or deleted. This makes it extremely difficult to tamper with records.</div></li>
+                    <li class="list-item"><span class="list-icon">▪</span> <div><strong>Transparent:</strong> All participants can view the data (in public blockchains), ensuring trust and accountability.</div></li>
+                    <li class="list-item"><span class="list-icon">▪</span> <div><strong>Secure:</strong> Cryptography ensures that data is safely encrypted and only accessible to authorized parties.</div></li>
+                    <li class="list-item"><span class="list-icon">▪</span> <div><strong>Consensus-Driven:</strong> Transactions are validated by reaching an agreement among the network participants (nodes), using algorithms like Proof of Work (PoW) or Proof of Stake (PoS).</div></li>
+                </ul>
+
+                <h3 class="subsection-title">📦 How It Works – Block by Block:</h3>
+                <p>A <strong>block</strong> is a container that holds a list of transactions.</p>
+                <p>Each block has:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>Data</strong> (e.g., transactions)</li>
+                    <li>A <strong>hash</strong> (unique digital fingerprint)</li>
+                    <li>The <strong>hash of the previous block</strong> (linking them together)</li>
+                </ul>
+                <p>This creates a <strong>chain of blocks</strong> → hence the name <strong>blockchain</strong>.</p>
+                <p>As new transactions occur, they are grouped into a new block and added to the end of the chain after validation.</p>
+
+                <h3 class="subsection-title">🖼️ Simple Analogy:</h3>
+                <p>Think of blockchain as a <strong>digital notebook</strong> that is:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Copied and shared among hundreds of people (decentralized)</li>
+                    <li>Every page is numbered and linked to the previous page (chained)</li>
+                    <li>Once a page is written and agreed upon, it’s locked forever (immutable)</li>
+                </ul>
+            </section>
+
+            <!-- Tab Content: What is Web3? -->
+            <section id="what-is-web3" class="tab-content mb-10">
+                <h2 class="section-title">What is Web3?</h2>
+                <p><strong>Web3</strong>, also known as <strong>Web 3.0</strong>, is the <strong>next generation of the internet</strong> that aims to be <strong>decentralized</strong>, <strong>user-owned</strong>, and <strong>blockchain-powered</strong>. It represents a shift from traditional centralized platforms (like Facebook, Google, Amazon) to open, trustless systems where users have more control over their data, identity, and assets.</p>
+
+                <h3 class="subsection-title">🌐 Web1 → Web2 → Web3: The Evolution of the Internet</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Generation</th>
+                                <th>Description</th>
+                                <th>Key Features</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Web1 (Static Web)</td>
+                                <td>Read-only internet (1990s–early 2000s)</td>
+                                <td>Static pages, no interactivity</td>
+                            </tr>
+                            <tr>
+                                <td>Web2 (Social Web)</td>
+                                <td>Read-write internet (2000s–present)</td>
+                                <td>Dynamic content, user-generated content, centralized platforms</td>
+                            </tr>
+                            <tr>
+                                <td>Web3 (Decentralized Web)</td>
+                                <td>Read-write-own internet</td>
+                                <td>Decentralized apps (dApps), blockchain, user ownership of data and assets</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">🧠 Key Concepts in Web3:</h3>
+                <ul class="list-none">
+                    <li class="list-item"><span class="list-icon">▪</span> <div><strong>Decentralization:</strong> Applications run on peer-to-peer networks (like Ethereum), not controlled by a central authority.</div></li>
+                    <li class="list-item"><span class="list-icon">▪</span> <div><strong>Blockchain Technology:</strong> Underpins Web3 by providing transparent and immutable records.</div></li>
+                    <li class="list-item"><span class="list-icon">▪</span> <div><strong>Cryptographic Wallets:</strong> Users interact with Web3 through wallets (e.g., MetaMask) instead of usernames and passwords.</div></li>
+                    <li class="list-item"><span class="list-icon">▪</span> <div><strong>Digital Ownership:</strong> Users can truly own digital assets (cryptocurrencies, NFTs) thanks to token standards like ERC-20 and ERC-721.</div></li>
+                    <li class="list-item"><span class="list-icon">▪</span> <div><strong>Trustless Systems:</strong> No need to trust a third party. Smart contracts automate rules and execution.</div></li>
+                    <li class="list-item"><span class="list-icon">▪</span> <div><strong>Native Payments:</strong> Built-in payment systems using cryptocurrencies—no need for traditional banks or intermediaries.</div></li>
+                    <li class="list-item"><span class="list-icon">▪</span> <div><strong>Interoperability:</strong> Web3 apps (dApps) can often connect and interact seamlessly across platforms.</div></li>
+                </ul>
+
+                <h3 class="subsection-title">🚀 Why Web3 Matters:</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>User Empowerment:</strong> Control over personal data and digital identity.</li>
+                    <li><strong>Censorship Resistance:</strong> No single entity can shut down or censor applications.</li>
+                    <li><strong>New Business Models:</strong> Like Play-to-Earn, DeFi (Decentralized Finance), and creator economy platforms.</li>
+                    <li><strong>Global Access:</strong> Open and permissionless—anyone with an internet connection can participate.</li>
+                </ul>
+
+                <h3 class="subsection-title">🧩 Summary:</h3>
+                <p>Web3 is not just about decentralization; it's about <strong>rebuilding the internet to prioritize users over corporations</strong>. It enables a world where individuals <strong>own their data, assets, and identity</strong>—powered by blockchain and smart contracts.</p>
+            </section>
+
+            <!-- Tab Content: How Does Blockchain Work? -->
+            <section id="how-blockchain-works" class="tab-content mb-10">
+                <h2 class="section-title">How Does Blockchain Work?</h2>
+                <p>Blockchain works as a <strong>distributed ledger</strong> that records transactions across a <strong>network of computers (nodes)</strong> in a way that is <strong>secure, transparent, and tamper-proof</strong>. Here's a step-by-step breakdown of how it functions:</p>
+
+                <h3 class="subsection-title">🔁 Step-by-Step Process:</h3>
+                <ol class="list-decimal list-inside ml-4">
+                    <li><strong>A Transaction is Initiated:</strong> Someone requests a transaction (e.g., sending cryptocurrency, deploying a smart contract, or updating data).</li>
+                    <li><strong>Transaction is Broadcast to the Network:</strong> The request is sent to a <strong>peer-to-peer network</strong> of nodes (computers) spread across the globe.</li>
+                    <li><strong>Nodes Validate the Transaction:</strong> Using a <strong>consensus mechanism</strong> (e.g., Proof of Work or Proof of Stake), the nodes verify:
+                        <ul class="list-disc list-inside ml-6 mt-1">
+                            <li>The sender has enough funds</li>
+                            <li>The transaction follows protocol rules</li>
+                            <li>It hasn’t been tampered with (via cryptographic checks)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Validated Transactions are Grouped into a Block:</strong> Once verified, the transaction is added to a block along with other validated transactions.</li>
+                    <li><strong>The New Block is Added to the Blockchain:</strong> Each block contains:
+                        <ul class="list-disc list-inside ml-6 mt-1">
+                            <li>The list of transactions</li>
+                            <li>A timestamp</li>
+                            <li>A cryptographic <strong>hash of the previous block</strong></li>
+                        </ul>
+                        <p class="mt-1">This forms a <strong>chain of blocks</strong>, making the data immutable.</p>
+                    </li>
+                    <li><strong>The Blockchain is Updated Across the Network:</strong> All nodes update their copy of the blockchain with the new block, maintaining a <strong>synchronized and consistent ledger</strong>.</li>
+                    <li><strong>Transaction is Complete:</strong> Once confirmed, the transaction becomes part of the permanent record.</li>
+                </ol>
+
+                <h3 class="subsection-title">🔐 Core Components of Blockchain Operation:</h3>
+                <ul class="list-none">
+                    <li class="list-item"><span class="list-icon">▪</span> <div><strong>Cryptography:</strong> Every transaction is secured using <strong>hash functions</strong> and <strong>digital signatures</strong> to ensure integrity and authenticity.</div></li>
+                    <li class="list-item"><span class="list-icon">▪</span> <div><strong>Consensus Mechanisms:</strong> These are algorithms that help the network agree on a single version of the truth:
+                        <ul class="list-disc list-inside ml-6 mt-1">
+                            <li><strong>Proof of Work (PoW)</strong> – Miners solve mathematical problems (e.g., Bitcoin)</li>
+                            <li><strong>Proof of Stake (PoS)</strong> – Validators are chosen based on how many coins they “stake” (e.g., Ethereum 2.0)</li>
+                            <li>Other methods include <strong>Delegated Proof of Stake (DPoS)</strong>, <strong>Proof of Authority (PoA)</strong>, etc.</li>
+                        </ul>
+                    </div></li>
+                    <li class="list-item"><span class="list-icon">▪</span> <div><strong>Distributed Network:</strong> Every node has a full copy of the blockchain, enabling <strong>fault tolerance</strong>, <strong>security</strong>, and <strong>trustless collaboration</strong>.</div></li>
+                </ul>
+
+                <h3 class="subsection-title">🖼️ Simple Analogy:</h3>
+                <p>Think of blockchain as a <strong>digital notebook</strong> that is:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Copied and shared among hundreds of people (decentralized)</li>
+                    <li>Every page is numbered and linked to the previous page (chained)</li>
+                    <li>Once a page is written and agreed upon, it’s locked forever (immutable)</li>
+                </ul>
+            </section>
+
+            <!-- Tab Content: Why is Blockchain Important? -->
+            <section id="why-blockchain-important" class="tab-content mb-10">
+                <h2 class="section-title">Why is Blockchain Important?</h2>
+                <p>Blockchain is important because it offers a <strong>new way to store, share, and manage data</strong>—one that is <strong>decentralized</strong>, <strong>secure</strong>, <strong>transparent</strong>, and <strong>resistant to tampering</strong>. It enables <strong>trust</strong> in systems where there is no central authority and opens the door to a wide range of powerful real-world applications.</p>
+
+                <h3 class="subsection-title">✅ Key Benefits of Blockchain:</h3>
+                <ol class="list-decimal list-inside ml-4">
+                    <li><strong>Decentralization:</strong>
+                        <ul class="list-disc list-inside ml-6 mt-1">
+                            <li>Eliminates the need for intermediaries (banks, brokers, third parties)</li>
+                            <li>Power and control are distributed among the network, reducing single points of failure</li>
+                        </ul>
+                    </li>
+                    <li><strong>Transparency:</strong>
+                        <ul class="list-disc list-inside ml-6 mt-1">
+                            <li>All transactions are publicly recorded and viewable (in public blockchains like Ethereum)</li>
+                            <li>Increases accountability and traceability</li>
+                        </ul>
+                    </li>
+                    <li><strong>Immutability:</strong>
+                        <ul class="list-disc list-inside ml-6 mt-1">
+                            <li>Once data is written to the blockchain, it <strong>cannot be changed</strong></li>
+                            <li>Prevents fraud, tampering, and unauthorized alterations</li>
+                        </ul>
+                    </li>
+                    <li><strong>Security:</strong>
+                        <ul class="list-disc list-inside ml-6 mt-1">
+                            <li>Uses cryptographic algorithms and consensus mechanisms to ensure data integrity</li>
+                            <li>Resistant to hacking compared to centralized databases</li>
+                        </ul>
+                    </li>
+                    <li><strong>Trustless Systems:</strong>
+                        <ul class="list-disc list-inside ml-6 mt-1">
+                            <li>No need to trust a central party—rules are enforced by code (smart contracts)</li>
+                            <li>Ideal for peer-to-peer systems and financial transactions</li>
+                        </ul>
+                    </li>
+                    <li><strong>Efficiency and Cost Savings:</strong>
+                        <ul class="list-disc list-inside ml-6 mt-1">
+                            <li>Automates and simplifies processes</li>
+                            <li>Reduces costs by removing middlemen and lowering operational inefficiencies</li>
+                        </ul>
+                    </li>
+                    <li><strong>Ownership and Control:</strong>
+                        <ul class="list-disc list-inside ml-6 mt-1">
+                            <li>Users have full control over their digital assets (tokens, NFTs) and data</li>
+                            <li>Enables true digital ownership</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <h3 class="subsection-title">🌍 Real-World Use Cases of Blockchain:</h3>
+                <ul class="list-none">
+                    <li class="list-item"><span class="list-icon">🔹</span> <div><strong>1. Cryptocurrencies:</strong> Bitcoin, Ethereum, and others use blockchain to power decentralized money systems. Enables global, borderless payments without banks.</div></li>
+                    <li class="list-item"><span class="list-icon">🔹</span> <div><strong>2. Decentralized Finance (DeFi):</strong> Lending, borrowing, trading, and saving without banks. Protocols like Aave, Uniswap, Compound.</div></li>
+                    <li class="list-item"><span class="list-icon">🔹</span> <div><strong>3. Supply Chain Management:</strong> Transparent tracking of goods from origin to delivery. Reduces fraud, improves efficiency (e.g., IBM Food Trust).</div></li>
+                    <li class="list-item"><span class="list-icon">🔹</span> <div><strong>4. Digital Identity:</strong> Secure self-sovereign identities that users control. Reduces identity theft and streamlines verification (e.g., Worldcoin, Civic).</div></li>
+                    <li class="list-item"><span class="list-icon">🔹</span> <div><strong>5. Healthcare:</strong> Secure sharing of patient records across providers. Ensures integrity, privacy, and accessibility.</div></li>
+                    <li class="list-item"><span class="list-icon">🔹</span> <div><strong>6. Voting Systems:</strong> Transparent and tamper-proof digital voting. Increases voter trust and reduces manipulation.</div></li>
+                    <li class="list-item"><span class="list-icon">🔹</span> <div><strong>7. NFTs (Non-Fungible Tokens):</strong> Proves ownership of digital art, music, collectibles, game assets. Used in games, digital art markets, real estate.</div></li>
+                    <li class="list-item"><span class="list-icon">🔹</span> <div><strong>8. Real Estate and Land Registry:</strong> Transparent record of ownership and transfers. Reduces disputes and fraud.</div></li>
+                    <li class="list-item"><span class="list-icon">🔹</span> <div><strong>9. Gaming:</strong> In-game assets as NFTs that players can own and trade. Enables play-to-earn economies (e.g., Axie Infinity).</div></li>
+                    <li class="list-item"><span class="list-icon">🔹</span> <div><strong>10. DAOs (Decentralized Autonomous Organizations):</strong> Community-led, code-governed organizations without central leadership. Enables collaborative decision-making (e.g., ENS DAO, MakerDAO).</div></li>
+                </ul>
+
+                <h3 class="subsection-title">🧠 Summary:</h3>
+                <p>Blockchain is important because it <strong>revolutionizes how we store, verify, and transfer value and information</strong>—without needing to rely on centralized systems. Its benefits make it applicable across nearly every industry, from finance and supply chains to healthcare and art.</p>
+            </section>
+
+            <!-- Tab Content: Types of Blockchains -->
+            <section id="types-of-blockchains" class="tab-content mb-10">
+                <h2 class="section-title">What Are the Different Types of Blockchains?</h2>
+                <p>Blockchains can be classified into different types based on <strong>who can access them</strong> and <strong>how they operate</strong>. Each type serves different purposes and use cases, depending on factors like <strong>privacy</strong>, <strong>control</strong>, <strong>speed</strong>, and <strong>transparency</strong>.</p>
+
+                <h3 class="subsection-title">🧩 1. Public Blockchains</h3>
+                <ul class="list-none">
+                    <li class="list-item"><span class="list-icon">🔓</span> <div><strong>Open to Everyone:</strong> Anyone can read, write, and participate in the network without permission.</div></li>
+                </ul>
+                <p class="font-semibold">✅ Features:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Fully decentralized</li>
+                    <li>Transparent and trustless</li>
+                    <li>Most secure (due to large number of nodes)</li>
+                </ul>
+                <p class="font-semibold">🛠 Examples:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Bitcoin</li>
+                    <li>Ethereum</li>
+                    <li>Solana</li>
+                    <li>Polkadot</li>
+                </ul>
+                <p class="font-semibold">📦 Use Cases:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Cryptocurrencies</li>
+                    <li>Decentralized finance (DeFi)</li>
+                    <li>NFT marketplaces</li>
+                    <li>Public dApps</li>
+                </ul>
+
+                <h3 class="subsection-title">🧩 2. Private Blockchains</h3>
+                <ul class="list-none">
+                    <li class="list-item"><span class="list-icon">🔒</span> <div><strong>Restricted Access:</strong> Only selected participants (usually within an organization) can join the network and validate transactions.</div></li>
+                </ul>
+                <p class="font-semibold">✅ Features:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Centralized or semi-centralized</li>
+                    <li>Faster and more scalable</li>
+                    <li>Limited transparency (internal use)</li>
+                </ul>
+                <p class="font-semibold">🛠 Examples:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Hyperledger Fabric</li>
+                    <li>R3 Corda</li>
+                    <li>Quorum (by JPMorgan)</li>
+                </ul>
+                <p class="font-semibold">📦 Use Cases:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Enterprise record management</li>
+                    <li>Supply chain tracking</li>
+                    <li>Internal audits and compliance</li>
+                </ul>
+
+                <h3 class="subsection-title">🧩 3. Consortium (Federated) Blockchains</h3>
+                <ul class="list-none">
+                    <li class="list-item"><span class="list-icon">👥</span> <div><strong>Shared Among Multiple Organizations:</strong> A group of pre-approved institutions collectively operate the blockchain network.</div></li>
+                </ul>
+                <p class="font-semibold">✅ Features:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Partially decentralized</li>
+                    <li>Greater efficiency than public chains</li>
+                    <li>Controlled participation</li>
+                </ul>
+                <p class="font-semibold">🛠 Examples:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>IBM Food Trust (Walmart, Nestlé, etc.)</li>
+                    <li>Energy Web Chain</li>
+                    <li>BankChain</li>
+                </ul>
+                <p class="font-semibold">📦 Use Cases:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Interbank payments</li>
+                    <li>Industry-wide supply chain networks</li>
+                    <li>Joint ventures and collaborations</li>
+                </ul>
+
+                <h3 class="subsection-title">🧩 4. Hybrid Blockchains</h3>
+                <ul class="list-none">
+                    <li class="list-item"><span class="list-icon">🔄</span> <div><strong>Combines Public and Private Features:</strong> Certain data is public, while sensitive data is restricted to authorized parties.</div></li>
+                </ul>
+                <p class="font-semibold">✅ Features:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Flexible and customizable</li>
+                    <li>Privacy control with public trust</li>
+                    <li>Balanced decentralization</li>
+                </ul>
+                <p class="font-semibold">🛠 Examples:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Dragonchain</li>
+                    <li>XDC Network</li>
+                </ul>
+                <p class="font-semibold">📦 Use Cases:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Healthcare records (public access to some data, private control for sensitive info)</li>
+                    <li>Government ID systems</li>
+                    <li>Enterprise dApps with user-facing elements</li>
+                </ul>
+
+                <h3 class="subsection-title">🧠 Summary Table:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Access</th>
+                                <th>Decentralized?</th>
+                                <th>Use Case Focus</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Public</td>
+                                <td>Anyone</td>
+                                <td>Yes</td>
+                                <td>Open finance, NFTs, dApps</td>
+                            </tr>
+                            <tr>
+                                <td>Private</td>
+                                <td>Invitation</td>
+                                <td>No</td>
+                                <td>Enterprises, internal use</td>
+                            </tr>
+                            <tr>
+                                <td>Consortium</td>
+                                <td>Group-based</td>
+                                <td>Partial</td>
+                                <td>Inter-org networks</td>
+                            </tr>
+                            <tr>
+                                <td>Hybrid</td>
+                                <td>Mixed</td>
+                                <td>Partial</td>
+                                <td>Custom solutions (e.g. Gov)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">✅ Final Notes:</h3>
+                <p>Choosing the right blockchain type depends on:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>The <strong>level of trust</strong> between participants</li>
+                    <li><strong>Performance</strong> and <strong>scalability</strong> needs</li>
+                    <li><strong>Privacy</strong> and <strong>regulatory</strong> requirements</li>
+                </ul>
+            </section>
+
+            <!-- Tab Content: What is a Smart Contract? -->
+            <section id="what-is-smart-contract" class="tab-content mb-10">
+                <h2 class="section-title">What is a Smart Contract?</h2>
+                <p>A <strong>smart contract</strong> is a <strong>self-executing program</strong> stored on a blockchain that automatically runs when predefined conditions are met. It enforces the terms of an agreement <strong>without the need for intermediaries</strong>, making transactions <strong>trustless, transparent, and irreversible</strong>.</p>
+                <p>In simple terms, a smart contract is like a <strong>digital vending machine</strong>: You put in the correct input (payment), and it automatically delivers the output (product)—no human involved.</p>
+
+                <h3 class="subsection-title">🔧 Key Characteristics of Smart Contracts:</h3>
+                <ol class="list-decimal list-inside ml-4">
+                    <li><strong>Automation:</strong> Executes automatically based on coded logic (e.g., "if X happens, then do Y")</li>
+                    <li><strong>Trustless Execution:</strong> No need to trust the other party—code ensures the outcome</li>
+                    <li><strong>Transparency:</strong> Anyone can inspect the contract logic (on public blockchains)</li>
+                    <li><strong>Immutability:</strong> Once deployed, the code <strong>cannot be changed</strong>, ensuring consistency</li>
+                    <li><strong>Security:</strong> Executed in a decentralized environment, reducing manipulation risk</li>
+                </ol>
+
+                <h3 class="subsection-title">📜 Example Scenario: Escrow Service</h3>
+                <p>Let’s say Alice wants to buy a service from Bob:</p>
+                <p>A smart contract is created with this logic:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Alice sends 1 ETH to the contract</li>
+                    <li>Once Bob delivers the work and Alice confirms it, the contract releases the 1 ETH to Bob</li>
+                    <li>If work isn’t delivered on time, the ETH is refunded to Alice</li>
+                </ul>
+                <p>✅ No need for PayPal, banks, or a lawyer—the contract enforces the deal automatically.</p>
+
+                <h3 class="subsection-title">🧠 Real-World Use Cases:</h3>
+                <ul class="list-none">
+                    <li class="list-item"><span class="list-icon">🔹</span> <div><strong>Decentralized Finance (DeFi):</strong> Lending, borrowing, yield farming (e.g., Aave, Compound)</div></li>
+                    <li class="list-item"><span class="list-icon">🔹</span> <div><strong>NFT Marketplaces:</strong> Minting and transferring ownership of digital assets (e.g., OpenSea)</div></li>
+                    <li class="list-item"><span class="list-icon">🔹</span> <div><strong>Gaming:</strong> Play-to-earn economies where smart contracts handle rewards and trades</div></li>
+                    <li class="list-item"><span class="list-icon">🔹</span> <div><strong>DAOs (Decentralized Autonomous Organizations):</strong> Voting, proposals, and governance decisions are all handled by smart contracts</div></li>
+                    <li class="list-item"><span class="list-icon">🔹</span> <div><strong>Insurance:</strong> Automatic payouts when certain conditions are met (e.g., flight delay compensation)</div></li>
+                </ul>
+
+                <h3 class="subsection-title">🧱 Smart Contract Platforms:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Platform</th>
+                                <th>Language</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Ethereum</td>
+                                <td>Solidity</td>
+                                <td>Most popular for dApps & DeFi</td>
+                            </tr>
+                            <tr>
+                                <td>Solana</td>
+                                <td>Rust / C</td>
+                                <td>High-performance, low fees</td>
+                            </tr>
+                            <tr>
+                                <td>NEAR</td>
+                                <td>Rust / AssemblyScript</td>
+                                <td>Developer-friendly</td>
+                            </tr>
+                            <tr>
+                                <td>Polygon</td>
+                                <td>Solidity</td>
+                                <td>Ethereum-compatible, cheaper</td>
+                            </tr>
+                            <tr>
+                                <td>Cardano</td>
+                                <td>Haskell</td>
+                                <td>Focus on academic rigor</td>
+                            </tr>
+                            <tr>
+                                <td>BNB Chain</td>
+                                <td>Solidity</td>
+                                <td>Compatible with Ethereum ecosystem</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">⚠️ Limitations & Risks:</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>Bugs = Vulnerabilities:</strong> Code errors can lead to lost funds</li>
+                    <li><strong>Immutability:</strong> Once deployed, cannot be easily changed</li>
+                    <li><strong>Scalability:</strong> Gas fees and network congestion can affect performance</li>
+                </ul>
+
+                <h3 class="subsection-title">🧠 Summary:</h3>
+                <p>A smart contract is <strong>code that executes agreements</strong> without needing a middleman. It's a fundamental building block of Web3, enabling <strong>trustless transactions, automation</strong>, and <strong>decentralized apps</strong>.</p>
+            </section>
+
+            <!-- Tab Content: What is Decentralization? -->
+            <section id="what-is-decentralization" class="tab-content mb-10">
+                <h2 class="section-title">What is Decentralization?</h2>
+                <p><strong>Decentralization</strong> is the process of distributing control and decision-making from a <strong>central authority</strong> (like a company or government) to a <strong>network of independent participants</strong> (nodes, users, or organizations).</p>
+                <p>In the context of <strong>blockchain and Web3</strong>, decentralization refers to systems that operate <strong>without a single point of control</strong>, where data and operations are managed <strong>collectively and transparently</strong> by many rather than a few.</p>
+
+                <h3 class="subsection-title">🏛 Centralized vs Decentralized</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Centralized Systems</th>
+                                <th>Decentralized Systems</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Control</td>
+                                <td>Controlled by a single entity</td>
+                                <td>Shared among many participants</td>
+                            </tr>
+                            <tr>
+                                <td>Decision Making</td>
+                                <td>Top-down</td>
+                                <td>Distributed or community-driven</td>
+                            </tr>
+                            <tr>
+                                <td>Single Point of Failure</td>
+                                <td>Yes (server down = service down)</td>
+                                <td>No (network stays alive if some nodes fail)</td>
+                            </tr>
+                            <tr>
+                                <td>Trust</td>
+                                <td>Requires trust in central authority</td>
+                                <td>Trustless — governed by code</td>
+                            </tr>
+                            <tr>
+                                <td>Examples</td>
+                                <td>Banks, Google, Facebook</td>
+                                <td>Bitcoin, Ethereum, IPFS, DAOs</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">⚙️ How Decentralization Works in Blockchain</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>Nodes:</strong> Independent computers that run copies of the blockchain and validate transactions.</li>
+                    <li><strong>Consensus Mechanisms:</strong> Algorithms like Proof of Work or Proof of Stake are used so that nodes can agree on the state of the blockchain.</li>
+                    <li><strong>Smart Contracts:</strong> Automated code that enforces rules, removing the need for central authorities.</li>
+                    <li><strong>Open Participation:</strong> Anyone can join the network, verify transactions, or build applications.</li>
+                </ul>
+
+                <h3 class="subsection-title">✅ Benefits of Decentralization:</h3>
+                <ol class="list-decimal list-inside ml-4">
+                    <li><strong>Censorship Resistance:</strong> No single entity can block or modify data (e.g., governments can't shut down Bitcoin).</li>
+                    <li><strong>Enhanced Security:</strong> Attackers must compromise a majority of nodes—not just one server.</li>
+                    <li><strong>Data Ownership:</strong> Users own their identities, assets, and data (not companies).</li>
+                    <li><strong>Open Access:</strong> Anyone can use decentralized systems—no gatekeepers.</li>
+                    <li><strong>Fault Tolerance:</strong> The network remains operational even if some nodes go offline.</li>
+                </ol>
+
+                <h3 class="subsection-title">🧠 Real-Life Use Cases:</h3>
+                <ul class="list-none">
+                    <li class="list-item"><span class="list-icon">▪</span> <div><strong>Bitcoin & Ethereum:</strong> Financial systems that don't require banks</div></li>
+                    <li class="list-item"><span class="list-icon">▪</span> <div><strong>DAOs:</strong> Decentralized organizations run by community governance</div></li>
+                    <li class="list-item"><span class="list-icon">▪</span> <div><strong>IPFS & Filecoin:</strong> Decentralized file storage systems</div></li>
+                    <li class="list-item"><span class="list-icon">▪</span> <div><strong>Helium Network:</strong> Decentralized wireless infrastructure</div></li>
+                    <li class="list-item"><span class="list-icon">▪</span> <div><strong>Uniswap:</strong> A decentralized exchange with no central operator</div></li>
+                </ul>
+
+                <h3 class="subsection-title">⚠️ Challenges of Decentralization:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Issue</th>
+                                <th>Explanation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Slower Decision-Making</td>
+                                <td>Consensus takes longer in distributed systems</td>
+                            </tr>
+                            <tr>
+                                <td>Scalability</td>
+                                <td>Harder to scale than centralized systems</td>
+                            </tr>
+                            <tr>
+                                <td>Regulatory Uncertainty</td>
+                                <td>Governments may not support fully decentralized apps</td>
+                            </tr>
+                            <tr>
+                                <td>UX Complexity</td>
+                                <td>More difficult for beginners than familiar web2 apps</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">🧠 Summary:</h3>
+                <p><strong>Decentralization</strong> is the foundation of blockchain and Web3. It shifts power from centralized authorities to the <strong>community</strong>, enabling <strong>trustless collaboration</strong>, <strong>transparency</strong>, and <strong>resilience</strong>—but it also introduces new technical and governance challenges.</p>
+            </section>
+
+            <!-- Tab Content: What is a Cryptocurrency? -->
+            <section id="what-is-cryptocurrency" class="tab-content mb-10">
+                <h2 class="section-title">What is a Cryptocurrency and How Does It Work?</h2>
+                <p>A <strong>cryptocurrency</strong> is a <strong>digital or virtual currency</strong> that uses <strong>cryptography</strong> for secure financial transactions, operates on a <strong>blockchain network</strong>, and is typically <strong>decentralized</strong> (not controlled by any central authority like a government or bank).</p>
+                <p>It allows people to <strong>send and receive value over the internet</strong> without relying on banks or traditional payment systems.</p>
+
+                <h3 class="subsection-title">🪙 Key Characteristics of Cryptocurrency:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Digital</td>
+                                <td>Exists only in electronic form; no physical bills or coins</td>
+                            </tr>
+                            <tr>
+                                <td>Decentralized</td>
+                                <td>Operates on distributed ledgers (blockchains), not controlled by a central entity</td>
+                            </tr>
+                            <tr>
+                                <td>Cryptographically Secure</td>
+                                <td>Uses cryptographic techniques (like hashing and digital signatures) for security</td>
+                            </tr>
+                            <tr>
+                                <td>Limited Supply</td>
+                                <td>Many cryptocurrencies have a fixed or capped supply (e.g., Bitcoin = 21 million)</td>
+                            </tr>
+                            <tr>
+                                <td>Peer-to-Peer (P2P)</td>
+                                <td>Enables users to transact directly without intermediaries</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">🔁 How Cryptocurrency Works — Step by Step:</h3>
+                <ol class="list-decimal list-inside ml-4">
+                    <li><strong>Wallet Creation:</strong> A user generates a <strong>crypto wallet</strong> with a public key (like an address) and private key (used to sign transactions).</li>
+                    <li><strong>Transaction Initiation:</strong> The user sends a transaction from their wallet to another wallet by specifying:
+                        <ul class="list-disc list-inside ml-6 mt-1">
+                            <li>Amount of crypto</li>
+                            <li>Recipient’s wallet address</li>
+                            <li>Digital signature (proves ownership)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Transaction Broadcast:</strong> The transaction is broadcast to the blockchain network (e.g., Bitcoin, Ethereum).</li>
+                    <li><strong>Validation via Consensus:</strong> Nodes (miners or validators) verify the transaction using a <strong>consensus mechanism</strong>:
+                        <ul class="list-disc list-inside ml-6 mt-1">
+                            <li><strong>Proof of Work (PoW)</strong> – Miners solve puzzles (e.g., Bitcoin)</li>
+                            <li><strong>Proof of Stake (PoS)</strong> – Validators stake coins and validate (e.g., Ethereum 2.0)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Block Creation:</strong> Valid transactions are grouped into a block and added to the blockchain.</li>
+                    <li><strong>Confirmation:</strong> Once added, the transaction is <strong>permanently recorded</strong> and cannot be altered. The recipient sees the funds reflected in their wallet.</li>
+                </ol>
+
+                <h3 class="subsection-title">💰 Types of Cryptocurrencies:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Example Coins</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Payment Coins</td>
+                                <td>Bitcoin, Litecoin</td>
+                                <td>Digital money and store of value</td>
+                            </tr>
+                            <tr>
+                                <td>Platform Tokens</td>
+                                <td>Ethereum, Solana</td>
+                                <td>Power smart contract platforms</td>
+                            </tr>
+                            <tr>
+                                <td>Stablecoins</td>
+                                <td>USDT, USDC, DAI</td>
+                                <td>Pegged to fiat like USD (for stability)</td>
+                            </tr>
+                            <tr>
+                                <td>Privacy Coins</td>
+                                <td>Monero, Zcash</td>
+                                <td>Focus on anonymous transactions</td>
+                            </tr>
+                            <tr>
+                                <td>Utility Tokens</td>
+                                <td>Chainlink, BNB</td>
+                                <td>Used to power specific applications</td>
+                            </tr>
+                            <tr>
+                                <td>Governance Tokens</td>
+                                <td>UNI, AAVE</td>
+                                <td>Used for DAO voting and decision-making</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">📦 Real-World Use Cases:</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>Remittances</strong> – Send money across borders with low fees (faster than banks)</li>
+                    <li><strong>Store of Value</strong> – Digital gold (e.g., Bitcoin) against inflation</li>
+                    <li><strong>DeFi</strong> – Borrow, lend, and earn interest without banks</li>
+                    <li><strong>NFT Purchases</strong> – Buy and sell digital collectibles using crypto</li>
+                    <li><strong>Gaming</strong> – Earn and trade in-game assets</li>
+                    <li><strong>DAOs</strong> – Use tokens for community governance and voting</li>
+                </ul>
+
+                <h3 class="subsection-title">🔐 Security Aspects:</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>Private Keys</strong> – Must be kept secret; anyone with it controls the wallet</li>
+                    <li><strong>Digital Signatures</strong> – Prove the authenticity of a transaction</li>
+                    <li><strong>Immutability</strong> – Once confirmed, transactions cannot be reversed</li>
+                </ul>
+
+                <h3 class="subsection-title">⚠️ Risks and Challenges:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Challenge</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Volatility</td>
+                                <td>Prices can fluctuate rapidly</td>
+                            </tr>
+                            <tr>
+                                <td>Security Risks</td>
+                                <td>Lost keys = lost funds; phishing scams are common</td>
+                            </tr>
+                            <tr>
+                                <td>Regulation</td>
+                                <td>Legal uncertainty in many countries</td>
+                            </tr>
+                            <tr>
+                                <td>Irreversibility</td>
+                                <td>Transactions cannot be reversed once sent</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">🧠 Summary:</h3>
+                <p>Cryptocurrency is a decentralized form of digital money powered by blockchain technology. It removes intermediaries, enables fast peer-to-peer transactions, and has become the foundation for a wide range of <strong>Web3 innovations</strong>, from DeFi to NFTs.</p>
+            </section>
+
+            <!-- Tab Content: What is a Wallet in Crypto and How Does It Work? -->
+            <section id="what-is-wallet" class="tab-content mb-10">
+                <h2 class="section-title">What is a Wallet in Crypto and How Does It Work?</h2>
+                <p>A <strong>crypto wallet</strong> is a <strong>software or hardware tool</strong> that allows you to <strong>store, send, and receive cryptocurrencies</strong>. Unlike a traditional wallet that holds physical money, a crypto wallet stores <strong>your private and public keys</strong>—not the actual coins themselves.</p>
+                <p>Cryptocurrencies live on the blockchain, and your wallet allows you to interact with that blockchain securely using cryptographic keys.</p>
+
+                <h3 class="subsection-title">🔑 Core Concepts:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Term</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Public Key (Wallet Address)</td>
+                                <td>Like your email address—used to receive crypto. Anyone can see it.</td>
+                            </tr>
+                            <tr>
+                                <td>Private Key</td>
+                                <td>Like your password—used to authorize transactions. Keep it secret.</td>
+                            </tr>
+                            <tr>
+                                <td>Seed Phrase</td>
+                                <td>A 12–24 word phrase that can recover your wallet. Acts as a master key.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">🧠 How Does a Crypto Wallet Work?</h3>
+                <ol class="list-decimal list-inside ml-4">
+                    <li><strong>Wallet Generation:</strong> When you create a wallet, it generates a <strong>pair of keys</strong>:
+                        <ul class="list-disc list-inside ml-6 mt-1">
+                            <li><strong>Public key</strong> (shared to receive crypto)</li>
+                            <li><strong>Private key</strong> (used to sign transactions)</li>
+                        </ul>
+                        <p class="mt-1">A <strong>wallet address</strong> is derived from the public key.</p>
+                    </li>
+                    <li><strong>Sending Crypto:</strong> You input the recipient's wallet address and the amount. The transaction is signed with your <strong>private key</strong> to prove it's from you. The transaction is then broadcast to the blockchain for validation.</li>
+                    <li><strong>Receiving Crypto:</strong> You share your <strong>wallet address</strong> with the sender. Once the network confirms the transaction, your balance updates accordingly.</li>
+                    <li><strong>Storing Keys:</strong> The wallet software/hardware stores your <strong>private key</strong> securely. If someone gets your private key or seed phrase, they can access all your funds.</li>
+                </ol>
+
+                <h3 class="subsection-title">🧰 Types of Crypto Wallets:</h3>
+                <h4 class="text-xl font-medium text-blue-500 mb-2">� 1. Hot Wallets (Internet-connected)</h4>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Examples</th>
+                                <th>Use Case</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Mobile</td>
+                                <td>MetaMask, Trust Wallet</td>
+                                <td>On-the-go transactions</td>
+                            </tr>
+                            <tr>
+                                <td>Desktop</td>
+                                <td>Electrum, Exodus</td>
+                                <td>For regular use on a PC/laptop</td>
+                            </tr>
+                            <tr>
+                                <td>Browser</td>
+                                <td>MetaMask (Chrome ext.)</td>
+                                <td>For interacting with Web3 dApps</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>🔸 Pros: Easy to use, free, fast 🔸 Cons: More vulnerable to hacking</p>
+
+                <h4 class="text-xl font-medium text-blue-500 mb-2">🔹 2. Cold Wallets (Offline wallets)</h4>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Examples</th>
+                                <th>Use Case</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Hardware</td>
+                                <td>Ledger, Trezor</td>
+                                <td>Long-term storage, high security</td>
+                            </tr>
+                            <tr>
+                                <td>Paper</td>
+                                <td>Printed keys</td>
+                                <td>Cold storage backup</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>🔸 Pros: Very secure, immune to online threats 🔸 Cons: Less convenient, costs money (hardware)</p>
+
+                <h3 class="subsection-title">🔒 Important Wallet Concepts:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Concept</th>
+                                <th>Explanation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Non-Custodial</td>
+                                <td>You control the private keys (e.g., MetaMask, Ledger)</td>
+                            </tr>
+                            <tr>
+                                <td>Custodial</td>
+                                <td>A third party (like an exchange) controls your wallet (e.g., Binance)</td>
+                            </tr>
+                            <tr>
+                                <td>Seed Phrase</td>
+                                <td>Master key backup—never share this with anyone</td>
+                            </tr>
+                            <tr>
+                                <td>Gas Fees</td>
+                                <td>Some wallets let you choose how much gas to pay for transactions</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">🚀 Wallets & Web3:</h3>
+                <p>Crypto wallets are the <strong>gateway to Web3</strong>:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Used to <strong>log in to dApps</strong> (no email/password needed)</li>
+                    <li>Manage NFTs, DeFi tokens, and more</li>
+                    <li>Vote on DAO proposals and interact with smart contracts</li>
+                </ul>
+
+                <h3 class="subsection-title">⚠️ Security Tips:</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>NEVER</strong> share your private key or seed phrase.</li>
+                    <li>Use <strong>hardware wallets</strong> for large amounts.</li>
+                    <li>Enable <strong>2FA</strong> and backups.</li>
+                    <li>Always double-check the wallet address before sending crypto.</li>
+                </ul>
+
+                <h3 class="subsection-title">🧠 Summary:</h3>
+                <p>A <strong>crypto wallet</strong> is your personal interface to the blockchain, enabling you to <strong>send, receive, and store cryptocurrencies</strong> securely. It manages your keys and connects you to the decentralized world of Web3.</p>
+            </section>
+
+            <!-- Tab Content: What Are Gas Fees? -->
+            <section id="what-are-gas-fees" class="tab-content mb-10">
+                <h2 class="section-title">What Are Gas Fees in Blockchain?</h2>
+                <p><strong>Gas fees</strong> are <strong>transaction fees</strong> paid by users to compensate for the computational energy required to process and validate transactions or execute smart contracts on a blockchain network.</p>
+                <p>They are essential to <strong>incentivize miners or validators</strong> to include your transaction in the blockchain and help prevent network abuse like spam.</p>
+
+                <h3 class="subsection-title">🔥 Why Are Gas Fees Needed?</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Blockchain networks require resources (computing power, storage) to process transactions.</li>
+                    <li>Gas fees <strong>reward those who maintain and secure the network</strong> (miners in Proof of Work, validators in Proof of Stake).</li>
+                    <li>They help <strong>prioritize transactions</strong> — users willing to pay higher gas fees get faster processing.</li>
+                    <li>Prevent <strong>spam and overload</strong> on the blockchain by making every transaction cost something.</li>
+                </ul>
+
+                <h3 class="subsection-title">🧮 How Gas Fees Work (Example: Ethereum)</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Every operation in a transaction or smart contract costs a certain amount of <strong>gas units</strong>.</li>
+                    <li>Gas is priced in <strong>Gwei</strong> (a small fraction of Ether, ETH).</li>
+                    <li>1 ETH = 1,000,000,000 Gwei.</li>
+                    <li>Gas Fee = Gas Units Used × Gas Price (Gwei)</li>
+                </ul>
+                <p>When you send a transaction, you specify:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>Gas Limit:</strong> Maximum gas units you’re willing to use.</li>
+                    <li><strong>Gas Price:</strong> How much you’re willing to pay per gas unit.</li>
+                </ul>
+                <p>Miners pick transactions with higher gas prices first.</p>
+                <p>Unused gas is refunded to the sender.</p>
+
+                <h3 class="subsection-title">🛠 Gas Fee Components:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Component</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Gas Limit</td>
+                                <td>Max units of gas to execute the transaction/smart contract</td>
+                            </tr>
+                            <tr>
+                                <td>Gas Price</td>
+                                <td>Price per unit of gas, set by the sender</td>
+                            </tr>
+                            <tr>
+                                <td>Total Fee</td>
+                                <td>Gas Limit × Gas Price (paid in native token like ETH)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">💡 Gas Fees on Different Blockchains:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Blockchain</th>
+                                <th>Gas Fee Characteristics</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Ethereum</td>
+                                <td>Can be high during congestion, gas is paid in ETH</td>
+                            </tr>
+                            <tr>
+                                <td>Polygon</td>
+                                <td>Much cheaper fees, Ethereum-compatible</td>
+                            </tr>
+                            <tr>
+                                <td>Binance Smart Chain (BSC)</td>
+                                <td>Lower fees, paid in BNB</td>
+                            </tr>
+                            <tr>
+                                <td>Solana</td>
+                                <td>Very low fees, paid in SOL</td>
+                            </tr>
+                            <tr>
+                                <td>Avalanche</td>
+                                <td>Low fees, fast transactions</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">⚠️ Why Gas Fees Can Be High:</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Network congestion (many users trying to transact)</li>
+                    <li>Complex smart contract execution requiring more gas</li>
+                    <li>Market demand for block space</li>
+                </ul>
+
+                <h3 class="subsection-title">🧠 Summary:</h3>
+                <p><strong>Gas fees</strong> are the fuel that powers blockchain transactions and smart contracts. They reward those who secure the network and prevent abuse by making users pay for the resources they consume.</p>
+            </section>
+
+            <!-- Tab Content: Consensus Mechanisms -->
+            <section id="consensus-mechanisms" class="tab-content mb-10">
+                <h2 class="section-title">What Are Consensus Mechanisms?</h2>
+                <p>A <strong>consensus mechanism</strong> is a <strong>protocol or algorithm</strong> used by blockchain networks to <strong>achieve agreement among distributed nodes</strong> on the current state of the blockchain. It ensures that all participants in a decentralized network validate and agree on transactions and blocks <strong>without a central authority</strong>.</p>
+                <p>Consensus mechanisms maintain <strong>security, trust, and data integrity</strong> in a trustless environment.</p>
+
+                <h3 class="subsection-title">🧩 Why Do We Need Consensus Mechanisms?</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li>To prevent <strong>double-spending</strong> (spending the same coin twice)</li>
+                    <li>To ensure <strong>all nodes agree</strong> on a single version of the blockchain (no forks or conflicting data)</li>
+                    <li>To secure the network from malicious actors</li>
+                    <li>To <strong>validate and add new transactions</strong> to the blockchain fairly</li>
+                </ul>
+
+                <h3 class="subsection-title">🔥 Popular Consensus Mechanisms:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mechanism</th>
+                                <th>How It Works</th>
+                                <th>Examples</th>
+                                <th>Pros</th>
+                                <th>Cons</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Proof of Work (PoW)</td>
+                                <td>Miners solve complex math puzzles (hashing) to add blocks</td>
+                                <td>Bitcoin, Ethereum (pre-2.0)</td>
+                                <td>Secure, battle-tested</td>
+                                <td>Energy-intensive, slower</td>
+                            </tr>
+                            <tr>
+                                <td>Proof of Stake (PoS)</td>
+                                <td>Validators lock (stake) coins to gain rights to validate blocks</td>
+                                <td>Ethereum 2.0, Cardano, Solana</td>
+                                <td>Energy-efficient, faster</td>
+                                <td>Requires stake, risk of centralization</td>
+                            </tr>
+                            <tr>
+                                <td>Delegated Proof of Stake (DPoS)</td>
+                                <td>Token holders vote for delegates to validate blocks</td>
+                                <td>EOS, TRON</td>
+                                <td>Very fast, scalable</td>
+                                <td>Can be less decentralized</td>
+                            </tr>
+                            <tr>
+                                <td>Practical Byzantine Fault Tolerance (PBFT)</td>
+                                <td>Nodes agree through rounds of voting to tolerate faulty nodes</td>
+                                <td>Hyperledger Fabric</td>
+                                <td>Low latency, good for permissioned blockchains</td>
+                                <td>Less scalable, needs trust</td>
+                            </tr>
+                            <tr>
+                                <td>Proof of Authority (PoA)</td>
+                                <td>Trusted validators are pre-approved and authorized to create blocks</td>
+                                <td>VeChain, POA Network</td>
+                                <td>Very fast and low-cost</td>
+                                <td>Centralized, less trustless</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">🧠 How Proof of Work (PoW) Works (Example):</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Miners compete to solve a cryptographic puzzle (finding a nonce).</li>
+                    <li>The first miner to solve it broadcasts the solution.</li>
+                    <li>Other nodes verify the solution.</li>
+                    <li>If valid, the new block is added to the blockchain.</li>
+                    <li>Miner receives a reward (new coins + transaction fees).</li>
+                </ul>
+
+                <h3 class="subsection-title">🧠 How Proof of Stake (PoS) Works (Example):</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Validators lock up a stake of coins as collateral.</li>
+                    <li>The protocol randomly selects a validator to propose the next block (higher stake = higher chances).</li>
+                    <li>Validators confirm the block.</li>
+                    <li>If validators act maliciously, they lose their stake (slashing).</li>
+                </ul>
+
+                <h3 class="subsection-title">⚖️ Trade-offs in Consensus Mechanisms:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Aspect</th>
+                                <th>PoW</th>
+                                <th>PoS</th>
+                                <th>DPoS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Security</td>
+                                <td>Very high (expensive to attack)</td>
+                                <td>High</td>
+                                <td>Moderate to high</td>
+                            </tr>
+                            <tr>
+                                <td>Energy Usage</td>
+                                <td>Very high</td>
+                                <td>Low</td>
+                                <td>Very low</td>
+                            </tr>
+                            <tr>
+                                <td>Speed/Throughput</td>
+                                <td>Low (slow block times)</td>
+                                <td>Faster</td>
+                                <td>Very fast</td>
+                            </tr>
+                            <tr>
+                                <td>Decentralization</td>
+                                <td>High</td>
+                                <td>Medium to high</td>
+                                <td>Lower</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">🧠 Summary:</h3>
+                <p><strong>Consensus mechanisms</strong> are essential algorithms that allow decentralized blockchain networks to agree on a single source of truth in a secure and trustless manner. The choice of mechanism affects the blockchain’s security, scalability, energy consumption, and decentralization.</p>
+            </section>
+
+            <!-- Tab Content: What Is a dApp? -->
+            <section id="what-is-dapp" class="tab-content mb-10">
+                <h2 class="section-title">What Is a Decentralized Application (dApp)?</h2>
+                <p>A <strong>Decentralized Application (dApp)</strong> is a type of software application that <strong>runs on a blockchain or peer-to-peer (P2P) network</strong> instead of being hosted on centralized servers. It interacts with <strong>smart contracts</strong> to execute logic and operates <strong>without a central authority</strong> controlling the system.</p>
+                <p>dApps are the <strong>user-facing part of Web3</strong>, enabling people to interact directly with blockchain-based systems.</p>
+
+                <h3 class="subsection-title">🧱 Key Characteristics of a dApp:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Characteristic</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Decentralized</td>
+                                <td>Backend logic runs on a blockchain (via smart contracts)</td>
+                            </tr>
+                            <tr>
+                                <td>Open Source</td>
+                                <td>Codebase is often public and verifiable</td>
+                            </tr>
+                            <tr>
+                                <td>Tokenized</td>
+                                <td>Uses tokens for access, governance, or rewards</td>
+                            </tr>
+                            <tr>
+                                <td>Deterministic</td>
+                                <td>Given the same inputs, it always produces the same result (trustless logic)</td>
+                            </tr>
+                            <tr>
+                                <td>Resistant to Censorship</td>
+                                <td>No central server means it can't easily be shut down</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">🧠 How dApps Work (Architecture Breakdown):</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>Frontend:</strong> Built with traditional web tech (HTML, CSS, JS, React, etc.). Hosted on decentralized storage (e.g., IPFS) or centralized web servers.</li>
+                    <li><strong>Backend Logic:</strong> Smart contracts deployed on a blockchain (e.g., Ethereum). Handles business logic, token transfers, transactions, voting, etc.</li>
+                    <li><strong>Wallet Integration:</strong> Users connect via wallets (e.g., MetaMask) to sign transactions.</li>
+                    <li><strong>Blockchain Interaction:</strong> Transactions are sent to the blockchain for validation and storage. State changes are reflected back to the UI through events or data queries.</li>
+                </ul>
+
+                <h3 class="subsection-title">🧰 Tools & Tech Used in dApps:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Layer</th>
+                                <th>Examples / Tools</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Frontend</td>
+                                <td>React, Next.js, Vue, Tailwind, Eldora UI</td>
+                            </tr>
+                            <tr>
+                                <td>Smart Contracts</td>
+                                <td>Solidity (Ethereum), Rust (Solana), Vyper</td>
+                            </tr>
+                            <tr>
+                                <td>Blockchain</td>
+                                <td>Ethereum, Polygon, Solana, Avalanche</td>
+                            </tr>
+                            <tr>
+                                <td>Wallets</td>
+                                <td>MetaMask, WalletConnect, Rainbow</td>
+                                <td>Storage</td>
+                                <td>IPFS, Arweave, Filecoin</td>
+                            </tr>
+                            <tr>
+                                <td>Indexing & APIs</td>
+                                <td>The Graph, Alchemy, Infura, Moralis</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">📚 dApp Use Cases:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Examples</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>DeFi</td>
+                                <td>Uniswap, Aave, Compound</td>
+                                <td>Lending, borrowing, swapping tokens</td>
+                            </tr>
+                            <tr>
+                                <td>NFT Marketplaces</td>
+                                <td>OpenSea, Blur, Foundation</td>
+                                <td>Minting, buying, and selling NFTs</td>
+                            </tr>
+                            <tr>
+                                <td>Gaming</td>
+                                <td>Axie Infinity, Decentraland</td>
+                                <td>Play-to-earn, asset ownership</td>
+                            </tr>
+                            <tr>
+                                <td>Social Media</td>
+                                <td>Lens Protocol, Farcaster</td>
+                                <td>Censorship-resistant social platforms</td>
+                            </tr>
+                            <tr>
+                                <td>DAOs</td>
+                                <td>Aragon, Snapshot, Juicebox</td>
+                                <td>Community voting and governance</td>
+                            </tr>
+                            <tr>
+                                <td>Identity</td>
+                                <td>ENS, Unstoppable Domains</td>
+                                <td>Decentralized domain names and identities</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">✅ Benefits of dApps:</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>Censorship-resistant</strong> – No central server to shut down or control</li>
+                    <li><strong>Trustless</strong> – Users don’t need to trust intermediaries</li>
+                    <li><strong>Permissionless</strong> – Anyone can use or develop on it</li>
+                    <li><strong>Ownership</strong> – Users control their assets, data, and identity</li>
+                </ul>
+
+                <h3 class="subsection-title">⚠️ Challenges of dApps:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Challenge</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Scalability</td>
+                                <td>Blockchains can be slow and expensive during high demand</td>
+                            </tr>
+                            <tr>
+                                <td>UX Complexity</td>
+                                <td>Wallet setup, signing, and gas fees can confuse new users</td>
+                            </tr>
+                            <tr>
+                                <td>Security Risks</td>
+                                <td>Smart contracts are vulnerable if poorly written</td>
+                            </tr>
+                            <tr>
+                                <td>Cost</td>
+                                <td>Deployment and gas fees may be expensive on some chains</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">🧠 Summary:</h3>
+                <p>A <strong>dApp</strong> is a decentralized app that combines smart contracts and blockchain with a user-friendly frontend. It eliminates middlemen, promotes transparency, and is the backbone of many Web3 innovations like DeFi, NFTs, and DAOs.</p>
+            </section>
+
+            <!-- Tab Content: What Are DAOs? -->
+            <section id="what-are-daos" class="tab-content mb-10">
+                <h2 class="section-title">What Are DAOs (Decentralized Autonomous Organizations)?</h2>
+                <p>A <strong>DAO</strong> is an organization that operates through <strong>rules encoded in smart contracts</strong>, without traditional managers or centralized control. Decisions are made <strong>collectively by token holders</strong>, and all activities are <strong>transparent and auditable on the blockchain</strong>.</p>
+                <h3 class="subsection-title">🔧 Key Features:</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>Autonomous:</strong> Operates via smart contracts.</li>
+                    <li><strong>Decentralized:</strong> No central authority.</li>
+                    <li><strong>Governed by Token Holders:</strong> Voting rights are distributed based on tokens.</li>
+                    <li><strong>Transparent:</strong> All rules and votes are recorded on-chain.</li>
+                </ul>
+                <h3 class="subsection-title">🧠 Examples of DAO Use Cases:</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>Protocol Governance</strong> (e.g., Uniswap DAO)</li>
+                    <li><strong>Investment Clubs</strong> (e.g., MetaCartel Ventures)</li>
+                    <li><strong>Grant Funding</strong> (e.g., Gitcoin DAO)</li>
+                    <li><strong>NFT Collector Groups</strong> (e.g., PleasrDAO)</li>
+                </ul>
+            </section>
+
+            <!-- Tab Content: Security in Blockchain -->
+            <section id="security-in-blockchain" class="tab-content mb-10">
+                <h2 class="section-title">Security in Blockchain</h2>
+                <p>Security in blockchain is critical since transactions are irreversible and smart contracts are immutable once deployed.</p>
+                <h3 class="subsection-title">🧱 Security Principles:</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>Immutability:</strong> Once written to the blockchain, data can’t be altered.</li>
+                    <li><strong>Cryptography:</strong> Ensures confidentiality, authentication, and data integrity.</li>
+                    <li><strong>Consensus:</strong> Prevents malicious actors from altering the state.</li>
+                </ul>
+                <h3 class="subsection-title">⚠️ Common Vulnerabilities:</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>Reentrancy Attacks</strong> (e.g., The DAO Hack)</li>
+                    <li>Integer Overflow/Underflow</li>
+                    <li>Front-running</li>
+                    <li>Phishing via malicious smart contracts or dApps</li>
+                </ul>
+                <h3 class="subsection-title">🧰 Security Best Practices:</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Use <strong>audited libraries</strong> (e.g., OpenZeppelin).</li>
+                    <li>Write <strong>unit and integration tests</strong>.</li>
+                    <li>Undergo <strong>external smart contract audits</strong>.</li>
+                    <li>Follow <strong>principles of least privilege</strong> in contract design.</li>
+                </ul>
+            </section>
+
+            <!-- Tab Content: Web3 and DeFi -->
+            <section id="web3-defi" class="tab-content mb-10">
+                <h2 class="section-title">Web3 and DeFi (Decentralized Finance)</h2>
+                <p><strong>DeFi</strong> refers to a financial system built on top of blockchains using <strong>smart contracts</strong> to offer services like lending, borrowing, trading, and yield farming without intermediaries like banks.</p>
+                <h3 class="subsection-title">🧠 Core DeFi Components:</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>DEXs (Decentralized Exchanges)</strong> – e.g., Uniswap</li>
+                    <li><strong>Lending Protocols</strong> – e.g., Aave, Compound</li>
+                    <li><strong>Stablecoins</strong> – e.g., DAI, USDC</li>
+                    <li><strong>Derivatives</strong> – e.g., Synthetix</li>
+                </ul>
+                <h3 class="subsection-title">🏦 Benefits of DeFi:</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Open and permissionless access</li>
+                    <li>Transparency and auditability</li>
+                    <li>Programmable financial services</li>
+                </ul>
+            </section>
+
+            <!-- Tab Content: Web3 and NFTs -->
+            <section id="web3-nfts" class="tab-content mb-10">
+                <h2 class="section-title">Web3 and NFTs (Non-Fungible Tokens)</h2>
+                <p>NFTs are <strong>unique digital assets</strong> that represent ownership of items like art, music, collectibles, or virtual real estate on the blockchain.</p>
+                <h3 class="subsection-title">🔹 Key NFT Standards:</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>ERC-721</strong> – Unique tokens (1 of 1)</li>
+                    <li><strong>ERC-1155</strong> – Semi-fungible, supports both single and batch items</li>
+                </ul>
+                <h3 class="subsection-title">🖼 Use Cases:</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Digital art marketplaces (OpenSea)</li>
+                    <li>Gaming (Axie Infinity)</li>
+                    <li>Music and media</li>
+                    <li>Domain names (ENS)</li>
+                </ul>
+            </section>
+
+            <!-- Tab Content: Programming Languages -->
+            <section id="programming-languages" class="tab-content mb-10">
+                <h2 class="section-title">Programming Languages for Blockchain</h2>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Language</th>
+                                <th>Used For</th>
+                                <th>Popular Blockchains</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Solidity</td>
+                                <td>Writing smart contracts</td>
+                                <td>Ethereum, BNB Chain</td>
+                            </tr>
+                            <tr>
+                                <td>Vyper</td>
+                                <td>Simpler alternative to Solidity</td>
+                                <td>Ethereum</td>
+                            </tr>
+                            <tr>
+                                <td>Rust</td>
+                                <td>High-performance smart contracts</td>
+                                <td>Solana, Near, Polkadot</td>
+                            </tr>
+                            <tr>
+                                <td>Move</td>
+                                <td>Security-focused, asset-centric</td>
+                                <td>Aptos, Sui</td>
+                            </tr>
+                            <tr>
+                                <td>Cairo</td>
+                                <td>Used for ZK-rollups</td>
+                                <td>StarkNet</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Tab Content: Tools & Frameworks -->
+            <section id="tools-frameworks" class="tab-content mb-10">
+                <h2 class="section-title">Popular Tools & Frameworks</h2>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tool</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Hardhat</td>
+                                <td>Ethereum development environment (JS/TS)</td>
+                            </tr>
+                            <tr>
+                                <td>Foundry</td>
+                                <td>Rust-based, fast, and powerful test/deploy tool</td>
+                            </tr>
+                            <tr>
+                                <td>Truffle</td>
+                                <td>Oldest suite for Ethereum smart contract dev</td>
+                            </tr>
+                            <tr>
+                                <td>Ganache</td>
+                                <td>Local blockchain for testing (used with Truffle)</td>
+                                <td>Remix IDE</td>
+                                <td>Web-based Solidity IDE</td>
+                            </tr>
+                            <tr>
+                                <td>OpenZeppelin</td>
+                                <td>Secure smart contract libraries</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Tab Content: Skillset & Career -->
+            <section id="skillset-career" class="tab-content mb-10">
+                <h2 class="section-title">Skillset & Career Opportunities in Web3</h2>
+                <h3 class="subsection-title">🧠 Core Skills:</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Smart contract development (Solidity, Rust)</li>
+                    <li>dApp development (React + Web3.js/Ethers.js)</li>
+                    <li>Wallet and blockchain integration</li>
+                    <li>Smart contract testing and auditing</li>
+                    <li>Understanding token standards (ERC-20, ERC-721, etc.)</li>
+                    <li>Basic knowledge of DeFi, NFTs, DAOs</li>
+                </ul>
+
+                <h3 class="subsection-title">Career Roles:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Role</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Blockchain Developer</td>
+                                <td>Builds smart contracts and protocol logic</td>
+                            </tr>
+                            <tr>
+                                <td>dApp Frontend Engineer</td>
+                                <td>Builds UI for interacting with smart contracts</td>
+                            </tr>
+                            <tr>
+                                <td>Smart Contract Auditor</td>
+                                <td>Reviews contracts for vulnerabilities</td>
+                            </tr>
+                            <tr>
+                                <td>Product Manager (Web3)</td>
+                                <td>Oversees Web3 product lifecycle</td>
+                            </tr>
+                            <tr>
+                                <td>DeFi Analyst</td>
+                                <td>Researches financial protocols and opportunities</td>
+                            </tr>
+                            <tr>
+                                <td>Community Manager (DAO)</td>
+                                <td>Builds and moderates decentralized communities</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white p-6 text-center mt-auto shadow-inner">
+        <p>&copy; 2025 Blockchain Basic Overview. All rights reserved.</p>
+        <p class="text-sm mt-2">Created by R.M.N.K. Rathnayake</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabButtonsContainer = document.getElementById('tab-buttons');
+            const tabButtons = tabButtonsContainer.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            // Function to show a specific tab
+            const showTab = (tabId) => {
+                // Hide all tab contents
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                });
+
+                // Deactivate all tab buttons
+                tabButtons.forEach(button => {
+                    button.classList.remove('active-tab-button');
+                    button.classList.add('text-gray-700', 'hover:bg-blue-100', 'hover:text-blue-700');
+                });
+
+                // Show the selected tab content
+                const selectedTabContent = document.getElementById(tabId);
+                if (selectedTabContent) {
+                    selectedTabContent.classList.add('active');
+                }
+
+                // Activate the corresponding tab button
+                const selectedTabButton = document.querySelector(`.tab-button[data-tab="${tabId}"]`);
+                if (selectedTabButton) {
+                    selectedTabButton.classList.add('active-tab-button');
+                    selectedTabButton.classList.remove('text-gray-700', 'hover:bg-blue-100', 'hover:text-blue-700');
+                }
+            };
+
+            // Add click event listeners to tab buttons
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.dataset.tab;
+                    showTab(tabId);
+                });
+            });
+
+            // Show the first tab by default on load
+            if (tabButtons.length > 0) {
+                showTab(tabButtons[0].dataset.tab);
+            }
+        });
+    </script>
+</body>
+</html>
+�

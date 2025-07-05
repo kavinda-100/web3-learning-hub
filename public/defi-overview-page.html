@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeFi: Decentralized Finance Concepts</title>
+    <!-- Tailwind CSS CDN (still used for base utility classes like flex, container, etc.) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+
+        /* Consistent spacing for paragraphs, headings, and lists */
+        p {
+            margin-bottom: 1rem; /* Consistent spacing for paragraphs */
+        }
+        ul:not(.space-y-2):not(.list-none), ol { /* Target actual content lists, not navigation or custom lists */
+            margin-bottom: 1rem; /* Consistent spacing for lists */
+            padding-left: 1.5rem; /* Indent lists */
+        }
+        ul.list-none .list-item div {
+            margin-bottom: 0; /* Handled by .list-item margin-bottom */
+        }
+        /* Specific overrides for nested lists or elements that already have spacing */
+        ul.list-disc ul.list-disc, ol.list-decimal ul.list-disc {
+            margin-top: 0.5rem; /* Small margin for nested lists */
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 800; /* font-extrabold */
+            color: #047857; /* text-emerald-700 */
+            margin-bottom: 2.5rem; /* Consistent spacing */
+            border-bottom: 2px solid #6ee7b7; /* border-b-2 border-emerald-300 */
+            padding-bottom: 0.5rem; /* pb-2 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #059669; /* text-emerald-600 */
+            margin-top: 2rem; /* Consistent spacing */
+            margin-bottom: 1rem; /* Consistent spacing */
+        }
+        .card {
+            background-color: #ffffff; /* bg-white */
+            padding: 1.5rem; /* p-6 */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+            transition: box-shadow 300ms ease-in-out; /* transition-shadow duration-300 */
+        }
+        .card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* hover:shadow-lg */
+        }
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 1rem; /* Consistent spacing below tables */
+        }
+        table {
+            width: 100%;
+            text-align: left;
+            border-collapse: collapse;
+            border: 1px solid #d1d5db; /* Explicit border for the whole table */
+        }
+        th, td {
+            padding: 0.75rem 1rem; /* py-3 px-4 */
+            border: 1px solid #d1d5db; /* Explicit borders for cells */
+        }
+        th {
+            background-color: #ecfdf5; /* bg-emerald-50 */
+            color: #065f46; /* text-emerald-800 */
+            font-weight: 500; /* font-medium */
+        }
+        td {
+            color: #374151; /* text-gray-700 */
+        }
+        .list-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 0.5rem; /* Consistent spacing for list items */
+        }
+        .list-icon {
+            color: #10b981; /* text-emerald-500 */
+            margin-right: 0.75rem; /* mr-3 */
+            font-size: 1.25rem; /* text-xl */
+        }
+        /* Styles for tab buttons */
+        .tab-button {
+            display: block;
+            padding: 0.5rem 1rem; /* py-2 px-4 */
+            border-radius: 0.375rem; /* rounded-md */
+            color: #4b5563; /* text-gray-700 */
+            transition: background-color 200ms ease-in-out, color 200ms ease-in-out; /* transition-colors duration-200 */
+            cursor: pointer;
+        }
+        .tab-button:hover {
+            background-color: #d1fae5; /* hover:bg-emerald-100 */
+            color: #059669; /* hover:text-emerald-700 */
+        }
+        .active-tab-button {
+            background-color: #059669; /* bg-emerald-600 */
+            color: #ffffff; /* text-white */
+        }
+        .active-tab-button:hover {
+            background-color: #047857; /* hover:bg-emerald-700 */
+        }
+        /* Hide tab content by default */
+        .tab-content {
+            display: none;
+            margin-bottom: 2.5rem; /* Consistent spacing below each tab section */
+        }
+        /* Ensure active tab content is shown */
+        .tab-content.active {
+            display: block;
+        }
+        pre {
+            background-color: #2d2d2d; /* Dark background for code */
+            color: #f8f8f2; /* Light text for code */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 0.9em;
+            line-height: 1.4;
+            margin-bottom: 1rem; /* Consistent spacing below code blocks */
+        }
+        .diagram-container {
+            text-align: center;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        .diagram-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white p-6 shadow-lg">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <h1 class="text-4xl font-extrabold mb-2 md:mb-0">DeFi: Decentralized Finance</h1>
+            <p class="text-lg">Understanding Core Concepts and Mechanisms</p>
+        </div>
+    </header>
+
+    <div class="flex flex-1 container mx-auto p-6">
+        <!-- Sidebar Navigation (Tabs) -->
+        <nav class="w-1/4 pr-6 hidden md:block">
+            <div class="bg-white p-6 rounded-lg shadow-md sticky top-6">
+                <h2 class="text-xl font-bold mb-4 text-emerald-700">Table of Contents</h2>
+                <ul class="space-y-2" id="tab-buttons">
+                    <li><button class="tab-button active-tab-button" data-tab="lending">1. Lending</button></li>
+                    <li><button class="tab-button" data-tab="borrowing">2. Borrowing</button></li>
+                    <li><button class="tab-button" data-tab="collateral">3. Collateral</button></li>
+                    <li><button class="tab-button" data-tab="ltv">4. Loan-to-Value (LTV)</button></li>
+                    <li><button class="tab-button" data-tab="liquidation">5. Liquidation</button></li>
+                    <li><button class="tab-button" data-tab="interest-rates">6. Interest Rates</button></li>
+                    <li><button class="tab-button" data-tab="yield-farming">7. Yield Farming</button></li>
+                    <li><button class="tab-button" data-tab="liquidity-pools">8. Liquidity Pools</button></li>
+                    <li><button class="tab-button" data-tab="impermanent-loss">9. Impermanent Loss (IL)</button></li>
+                    <li><button class="tab-button" data-tab="tvl">10. TVL (Total Value Locked)</button></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content (Tab Panels) -->
+        <main class="w-full md:w-3/4 bg-white p-8 rounded-lg shadow-xl">
+            <!-- Tab Content: Lending -->
+            <section id="lending" class="tab-content active">
+                <h2 class="section-title">1. Lending</h2>
+                <h3 class="subsection-title">💬 Simple Definition:</h3>
+                <p>Lending in DeFi refers to <strong>depositing your crypto assets into a decentralized lending protocol</strong>, where other users can <strong>borrow</strong> them. In return, the lender earns <strong>interest</strong>.</p>
+                <p>It’s like putting money into a bank account that earns interest — but without a traditional bank. Instead, smart contracts handle everything.</p>
+
+                <h3 class="subsection-title">🔧 How It Works in DeFi:</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Lenders deposit their assets (e.g., ETH, USDC, DAI) into a <strong>liquidity pool</strong>.</li>
+                    <li>The protocol (e.g., Aave, Compound) issues <strong>interest-bearing tokens</strong> (like aUSDC) to the lender.</li>
+                    <li>These deposits are made <strong>available for borrowing</strong> by others.</li>
+                    <li>Borrowers pay <strong>interest</strong>, and that interest is shared with the <strong>lenders</strong>.</li>
+                    <li>All funds are managed by <strong>smart contracts</strong>, so there’s <strong>no middleman</strong>.</li>
+                </ul>
+
+                <h3 class="subsection-title">📦 Real Protocol Example (Aave):</h3>
+                <p>You deposit <strong>1,000 USDC</strong> into Aave.</p>
+                <p>You receive <strong>aUSDC</strong>, a token that grows in value as interest accrues.</p>
+                <p>Your USDC is now part of a pool that borrowers can use.</p>
+                <p>You earn a yield (e.g., 3% APY), which is <strong>programmatically added</strong> to your balance.</p>
+
+                <h3 class="subsection-title">🧠 Developer Insight:</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Lenders’ assets are typically stored in <strong>ERC-20 compatible vaults</strong>.</li>
+                    <li>Protocols track total supply, total borrowed, and reserves.</li>
+                    <li>Interest is algorithmically calculated based on <strong>utilization rate</strong>: The higher the utilization, the higher the interest rates.</li>
+                </ul>
+                <h3 class="subsection-title">🔐 Is Lending Risk-Free?</h3>
+                <p>No. Some risks include:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Smart contract bugs</li>
+                    <li>Protocol insolvency (too many bad debts)</li>
+                    <li>Oracle manipulation affecting liquidations</li>
+                </ul>
+                <p>Protocols often mitigate this using <strong>over-collateralization</strong> and <strong>audits</strong>.</p>
+
+                <h3 class="subsection-title">✅ Summary</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Element</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Lender</td>
+                                <td>Person who deposits assets to earn yield</td>
+                            </tr>
+                            <tr>
+                                <td>Liquidity Pool</td>
+                                <td>Smart contract that holds deposited assets</td>
+                            </tr>
+                            <tr>
+                                <td>Interest Yield</td>
+                                <td>Earned from borrowers using the pool</td>
+                            </tr>
+                            <tr>
+                                <td>aTokens / cTokens</td>
+                                <td>Interest-bearing representations of your deposit</td>
+                            </tr>
+                            <tr>
+                                <td>Risk</td>
+                                <td>Smart contract bugs, liquidity, volatility</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Tab Content: Borrowing -->
+            <section id="borrowing" class="tab-content">
+                <h2 class="section-title">2. Borrowing</h2>
+                <h3 class="subsection-title">💬 Simple Definition:</h3>
+                <p>Borrowing in DeFi means taking out a <strong>crypto loan</strong> from a decentralized protocol like <strong>Aave</strong>, <strong>Compound</strong>, or <strong>MakerDAO</strong>, by <strong>locking up your own crypto as collateral</strong>.</p>
+                <p>Unlike banks, there's <strong>no credit score</strong>. Everything is trustless, backed by code.</p>
+
+                <h3 class="subsection-title">🔧 How It Works in DeFi:</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li>A user (borrower) connects to a lending protocol.</li>
+                    <li>They <strong>deposit collateral</strong> (e.g., ETH, wBTC) into a smart contract.</li>
+                    <li>Based on the <strong>Loan-to-Value (LTV)</strong> ratio, they can borrow a certain amount of another asset (e.g., USDC, DAI).</li>
+                    <li>The borrower <strong>pays interest</strong> over time.</li>
+                    <li>If the value of the collateral drops too much, the loan becomes <strong>eligible for liquidation</strong>.</li>
+                </ul>
+
+                <h3 class="subsection-title">📦 Example:</h3>
+                <p>You want to borrow <strong>$500 USDC</strong>, and the protocol requires a <strong>75% LTV</strong>.</p>
+                <p>You must deposit ~$667 worth of ETH as collateral.</p>
+                <p>As long as the value of ETH doesn’t fall below the required threshold, your loan is safe.</p>
+                <p>If ETH price drops sharply, your collateral could be <strong>liquidated</strong> (more on that in the next section).</p>
+
+                <h3 class="subsection-title">💰 Why Borrow in DeFi?</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li>💼 Access liquidity without selling long-term assets</li>
+                    <li>💵 Leverage a position (e.g., borrow stablecoins to buy more ETH)</li>
+                    <li>🏦 Participate in DeFi strategies (e.g., arbitrage, farming)</li>
+                </ul>
+                <h3 class="subsection-title">🧠 Developer Insight:</h3>
+                <p>Borrowing works via <strong>smart contracts</strong> that:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Lock the collateral in the protocol</li>
+                    <li>Issue borrowed tokens to the user’s wallet</li>
+                    <li>Each user has a <strong>health factor</strong> (used to determine liquidation risk)</li>
+                    <li>Interest is often variable and dynamically calculated</li>
+                </ul>
+                <p>Example (Aave pseudocode):</p>
+                <pre><code>
+function borrow(address asset, uint256 amount, address onBehalfOf) external;
+                </code></pre>
+
+                <h3 class="subsection-title">🔐 Risks for Borrowers:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Risk Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Liquidation</td>
+                                <td>If your collateral drops in value, it can be forcefully sold</td>
+                            </tr>
+                            <tr>
+                                <td>Interest Rate Volatility</td>
+                                <td>Rates can rise depending on demand</td>
+                            </tr>
+                            <tr>
+                                <td>Smart Contract Risks</td>
+                                <td>Bugs or exploits in the lending protocol</td>
+                            </tr>
+                            <tr>
+                                <td>Price Oracle Issues</td>
+                                <td>Incorrect price data may trigger false liquidations</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">✅ Summary</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Element</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Collateral</td>
+                                <td>Asset you deposit to secure the loan</td>
+                            </tr>
+                            <tr>
+                                <td>Borrowed Asset</td>
+                                <td>The token you receive (loan)</td>
+                            </tr>
+                            <tr>
+                                <td>Interest</td>
+                                <td>Ongoing fee you must pay on the loan</td>
+                            </tr>
+                            <tr>
+                                <td>Health Factor</td>
+                                <td>Risk indicator of your loan being liquidated</td>
+                            </tr>
+                            <tr>
+                                <td>LTV</td>
+                                <td>Maximum borrow % allowed vs your collateral value</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Tab Content: Collateral -->
+            <section id="collateral" class="tab-content">
+                <h2 class="section-title">3. Collateral</h2>
+                <h3 class="subsection-title">💬 Simple Definition:</h3>
+                <p>Collateral in DeFi is the <strong>asset you deposit to back a loan</strong>. It acts as <strong>security</strong> — if you fail to repay your loan or if the value of your collateral drops too low, the protocol can <strong>liquidate</strong> it to repay your debt.</p>
+                <p>It’s similar to how a house secures a mortgage in traditional finance.</p>
+
+                <h3 class="subsection-title">🔧 How It Works in DeFi:</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li>You choose a lending protocol (like Aave or Compound).</li>
+                    <li>You deposit an asset (e.g., ETH, WBTC, or LINK) as collateral.</li>
+                    <li>You can borrow another asset (e.g., USDC or DAI) <strong>up to a certain percentage</strong> of your collateral’s value.</li>
+                    <li>The protocol constantly monitors the <strong>collateral-to-debt ratio</strong>.</li>
+                    <li>If your <strong>collateral value drops</strong>, and your loan exceeds the allowed limit, it may be <strong>liquidated</strong>.</li>
+                </ul>
+
+                <h3 class="subsection-title">📦 Real Example:</h3>
+                <p>You deposit <strong>2 ETH</strong> as collateral.</p>
+                <p>ETH = $2,000 → So total collateral value = $4,000.</p>
+                <p>If the protocol allows <strong>75% LTV</strong>, you can borrow up to $3,000 worth of another asset.</p>
+                <p>If ETH drops to $1,500 → Your collateral is now worth $3,000.</p>
+                <p>Your borrowed amount is at risk of liquidation.</p>
+
+                <h3 class="subsection-title">🔐 Why Is Over-Collateralization Required?</h3>
+                <p>Since DeFi is <strong>trustless</strong> (no KYC or credit scores), protocols require you to <strong>over-collateralize</strong> (e.g., deposit $150 to borrow $100) to ensure:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Lenders are protected</li>
+                    <li>Loans are always backed by assets</li>
+                    <li>Liquidations can recover debt safely</li>
+                </ul>
+
+                <h3 class="subsection-title">🧠 Developer Insight:</h3>
+                <p>Collateral is tracked per user using internal accounting (mapping(address => CollateralPosition)).</p>
+                <p>Assets are valued using <strong>on-chain oracles</strong> (e.g., Chainlink).</p>
+                <p>Health factors are computed like this:</p>
+                <pre><code>
+Health Factor = (Collateral * Collateral Factor) / Borrowed Value
+                </code></pre>
+                <p>Where:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Collateral Factor = 0.75 (75% LTV)</li>
+                    <li>A Health Factor &lt; 1 triggers liquidation</li>
+                </ul>
+
+                <h3 class="subsection-title">🔀 Common Collateral Assets:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Asset</th>
+                                <th>Type</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>ETH</td>
+                                <td>Volatile</td>
+                                <td>Widely used as collateral</td>
+                            </tr>
+                            <tr>
+                                <td>WBTC</td>
+                                <td>Volatile</td>
+                                <td>Wrapped Bitcoin</td>
+                            </tr>
+                            <tr>
+                                <td>USDC/DAI</td>
+                                <td>Stablecoin</td>
+                                <td>Rarely used as collateral (low risk, low yield)</td>
+                            </tr>
+                            <tr>
+                                <td>stETH</td>
+                                <td>Liquid staking token</td>
+                                <td>Popular in protocols like Aave v3</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">📊 Summary Table</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Term</th>
+                                <th>Meaning</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Collateral</td>
+                                <td>Asset you deposit to secure a loan</td>
+                            </tr>
+                            <tr>
+                                <td>Over-Collateralization</td>
+                                <td>Requirement to deposit more than you borrow</td>
+                            </tr>
+                            <tr>
+                                <td>Liquidation Threshold</td>
+                                <td>Price point where loan becomes unsafe</td>
+                            </tr>
+                            <tr>
+                                <td>Health Factor</td>
+                                <td>A ratio indicating the loan’s safety</td>
+                            </tr>
+                            <tr>
+                                <td>Collateral Factor</td>
+                                <td>The max % of your collateral that you can borrow</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Tab Content: Loan-to-Value (LTV) -->
+            <section id="ltv" class="tab-content">
+                <h2 class="section-title">4. Loan-to-Value (LTV)</h2>
+                <h3 class="subsection-title">💬 Simple Definition:</h3>
+                <p>Loan-to-Value (LTV) is a ratio that represents the <strong>maximum amount</strong> you can borrow <strong>relative to the value of your collateral</strong>.</p>
+                <p>It tells you <strong>how much you can safely borrow</strong> before you're at risk of liquidation.</p>
+
+                <h3 class="subsection-title">🧮 Formula:</h3>
+                <p>LTV = (Borrowed Amount / Collateral Value) x 100</p>
+                <p>If LTV = 75%, it means for every $100 of collateral, you can borrow up to $75.</p>
+                <p>A higher LTV = more borrowing power, but also more risk of liquidation.</p>
+
+                <h3 class="subsection-title">🔧 How It Works in DeFi:</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Each asset used as collateral has its own <strong>LTV limit</strong> set by the protocol.</li>
+                    <li>When you deposit collateral, the protocol calculates your <strong>maximum borrowable amount</strong>.</li>
+                    <li>If your actual borrowing exceeds the allowed LTV, or if your collateral value drops due to price volatility, your <strong>position becomes risky</strong>.</li>
+                    <li>Once the <strong>liquidation threshold</strong> is crossed, the protocol will allow others to <strong>liquidate your collateral</strong>.</li>
+                </ul>
+
+                <h3 class="subsection-title">📦 Example:</h3>
+                <p>Let’s say you deposit:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>2 ETH as collateral</li>
+                    <li>ETH price = $2,000 → Total Collateral = $4,000</li>
+                    <li>Protocol sets LTV = 75%</li>
+                </ul>
+                <p>You can borrow up to:</p>
+                <p>$4,000 × 0.75 = $3,000</p>
+                <p>If you borrow the full $3,000, your <strong>LTV = 75%</strong>, which is your max safe limit.</p>
+                <p>If ETH price drops to $1,600:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>New collateral value = $3,200</li>
+                    <li>LTV becomes: (3000 / 3200) = 93.75%</li>
+                </ul>
+                <p>This would likely <strong>trigger liquidation</strong></p>
+
+                <h3 class="subsection-title">🧠 Developer Insight:</h3>
+                <p>LTV is enforced in the <strong>borrow function logic</strong> of lending protocols. Example pseudocode:</p>
+                <pre><code>
+require(( borrowedAmount  + newLoan) / collateralValue <= MAX_LTV, "Exceeds LTV");
+                </code></pre>
+                <p>LTV is often paired with:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>Liquidation Threshold</strong> – when liquidation is triggered (usually 5–10% higher than LTV)</li>
+                    <li><strong>Liquidation Bonus</strong> – a reward for liquidators to repay bad loans</li>
+                </ul>
+
+                <h3 class="subsection-title">🔒 Risk Levels Based on LTV</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>LTV Range</th>
+                                <th>Risk Level</th>
+                                <th>Comment</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>0–50%</td>
+                                <td>🟢 Low Risk</td>
+                                <td>Safer, less chance of liquidation</td>
+                            </tr>
+                            <tr>
+                                <td>50–75%</td>
+                                <td>🟡 Moderate</td>
+                                <td>Common borrow range in DeFi</td>
+                            </tr>
+                            <tr>
+                                <td>75–90%</td>
+                                <td>🔴 High Risk</td>
+                                <td>High chance of liquidation</td>
+                            </tr>
+                            <tr>
+                                <td>> 90%</td>
+                                <td>🚨 Liquidation</td>
+                                <td>Most protocols will liquidate here</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">✅ Summary</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Term</th>
+                                <th>Meaning</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>LTV</td>
+                                <td>How much you can borrow vs. your collateral</td>
+                            </tr>
+                            <tr>
+                                <td>Max LTV</td>
+                                <td>Protocol-imposed upper limit (e.g., 75%)</td>
+                            </tr>
+                            <tr>
+                                <td>High LTV</td>
+                                <td>More capital efficiency, more risk</td>
+                            </tr>
+                            <tr>
+                                <td>Safe LTV</td>
+                                <td>Lower borrowing, safer from liquidation</td>
+                            </tr>
+                            <tr>
+                                <td>Liquidation Threshold</td>
+                                <td>Usually set slightly above max LTV</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Tab Content: Liquidation -->
+            <section id="liquidation" class="tab-content">
+                <h2 class="section-title">5. Liquidation</h2>
+                <h3 class="subsection-title">💬 Simple Definition:</h3>
+                <p>Liquidation in DeFi is the process where a borrower’s <strong>collateral is forcefully sold</strong> (partially or fully) when their <strong>loan becomes unsafe</strong> — typically due to price drops in their collateral. It ensures the protocol remains solvent and lenders are protected.</p>
+
+                <h3 class="subsection-title">🧮 When Does Liquidation Happen?</h3>
+                <p>A <strong>liquidation happens</strong> when your <strong>Loan-to-Value (LTV)</strong> exceeds the <strong>Liquidation Threshold (LT)</strong> set by the protocol.</p>
+                <p>Example:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Max LTV = 75%</li>
+                    <li>Liquidation Threshold = 80%</li>
+                </ul>
+                <p>If your position hits <strong>80% LTV</strong>, liquidation is triggered</p>
+
+                <h3 class="subsection-title">🔧 How Liquidation Works in DeFi:</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Borrower deposits <strong>collateral</strong> and borrows an asset.</li>
+                    <li>If the <strong>value of the collateral falls</strong>, the <strong>LTV rises</strong>.</li>
+                    <li>Once it exceeds the <strong>liquidation threshold</strong>, the position is marked <strong>"at risk."</strong></li>
+                    <li>A <strong>liquidator</strong> (any user/bot) can repay part of the debt <strong>on behalf of the borrower</strong>.</li>
+                    <li>In return, the liquidator receives:
+                        <ul class="list-disc list-inside ml-6 mt-1">
+                            <li>A portion of the <strong>collateral</strong></li>
+                            <li>A <strong>liquidation bonus</strong> (profit)</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3 class="subsection-title">📦 Real-World Example (Aave):</h3>
+                <p>You deposit <strong>2 ETH</strong> (~$4,000)</p>
+                <p>Borrow <strong>$3,000 USDC</strong></p>
+                <p>If ETH price drops to <strong>$1,500</strong>, your total collateral becomes <strong>$3,000</strong></p>
+                <p>LTV hits <strong>100%</strong> — far above the liquidation threshold (e.g., 80%)</p>
+                <p>A <strong>liquidator repays</strong> $1,000 of your loan and takes $1,100 worth of your ETH (including a <strong>10% bonus</strong>)</p>
+                <p>You lose <strong>some collateral</strong>, but the system avoids bad debt.</p>
+
+                <h3 class="subsection-title">🧠 Developer Insight:</h3>
+                <p>Protocols monitor positions with a <strong>health factor</strong> (HF):</p>
+                <pre><code>
+Health Factor = (Collateral Value × Liquidation Threshold) / Debt value
+                </code></pre>
+                <p>If <strong>HF &lt; 1</strong> → Liquidation allowed</p>
+                <p>Liquidators usually run bots and scripts using flash loans or MEV strategies</p>
+                <p>In Solidity, liquidation might look like:</p>
+                <pre><code>
+function liquidate (address user, uint256 repayAmount) external {
+    require(healthFactor(user) < 1, "Not eligible for liquidation");
+    // Transfer debt from liquidator
+    // Seize collateral + bonus
+}
+                </code></pre>
+
+                <h3 class="subsection-title">⚠️ Risks for Borrowers</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Risk</th>
+                                <th>Impact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Collateral Price Drop</td>
+                                <td>Most common reason for liquidation</td>
+                            </tr>
+                            <tr>
+                                <td>Oracle Manipulation</td>
+                                <td>Wrong prices may trigger false liquidations</td>
+                            </tr>
+                            <tr>
+                                <td>Sudden Volatility</td>
+                                <td>Markets move faster than users react</td>
+                            </tr>
+                            <tr>
+                                <td>High Gas Fees</td>
+                                <td>Can't top up or repay in time</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">✅ Summary</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Term</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Liquidation</td>
+                                <td>Forced sale of collateral when loan becomes unsafe</td>
+                            </tr>
+                            <tr>
+                                <td>Liquidator</td>
+                                <td>User who repays borrower’s loan and earns a reward</td>
+                            </tr>
+                            <tr>
+                                <td>Liquidation Bonus</td>
+                                <td>Extra collateral given to liquidator as incentive</td>
+                            </tr>
+                            <tr>
+                                <td>Liquidation Threshold</td>
+                                <td>LTV % where liquidation starts</td>
+                            </tr>
+                            <tr>
+                                <td>Health Factor &lt; 1</td>
+                                <td>Position is unsafe and can be liquidated</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">Diagram to visualize the Borrow → Collateral → Liquidation flow</h3>
+                <div class="diagram-container">
+                    <img src="https://placehold.co/600x300/e0f2f7/047857?text=Borrow+->+Collateral+->+Liquidation+Flow" alt="Borrowing, Collateral, and Liquidation Flow Diagram">
+                </div>
+            </section>
+
+            <!-- Tab Content: Interest Rates -->
+            <section id="interest-rates" class="tab-content">
+                <h2 class="section-title">6. Interest Rates (Variable vs Stable)</h2>
+                <h3 class="subsection-title">💬 Simple Definition:</h3>
+                <p>Interest rates in DeFi are the fees <strong>borrowers pay</strong> and <strong>lenders earn</strong> over time, based on how much of the asset is being borrowed. There are typically <strong>two types</strong> of rates offered by DeFi lending protocols:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Variable (Floating) Interest Rate</li>
+                    <li>Stable (Fixed-ish) Interest Rate</li>
+                </ul>
+
+                <h3 class="subsection-title">🔧 How It Works in DeFi:</h3>
+                <p>Protocols like Aave or Compound calculate interest rates dynamically based on <strong>supply and demand</strong> using an algorithm.</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>When <strong>demand for borrowing increases</strong>, interest rates go up.</li>
+                    <li>When there’s <strong>low borrowing</strong>, interest rates go down.</li>
+                    <li>The protocol earns interest from borrowers and distributes it to lenders.</li>
+                </ul>
+
+                <h3 class="subsection-title">📊 Variable Interest Rate</h3>
+                <p>Fluctuates dynamically based on the <strong>utilization ratio</strong>:</p>
+                <p>Utilization = Borrowed / Total Supplied</p>
+                <p class="font-semibold">Advantages:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Often <strong>cheaper initially</strong></li>
+                    <li>Reflects real-time market conditions</li>
+                </ul>
+                <p class="font-semibold">Risks:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Unpredictable cost → Rates can spike quickly</li>
+                    <li>Not ideal for long-term borrowing</li>
+                </ul>
+                <p class="font-semibold">📦 Example:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Today: 2.5% APR</li>
+                    <li>Tomorrow (after sudden ETH demand): 18% APR</li>
+                </ul>
+
+                <h3 class="subsection-title">🧷 Stable Interest Rate</h3>
+                <p>Meant to stay <strong>relatively stable</strong> over time.</p>
+                <p>Calculated based on the <strong>average historical borrowing rate</strong>.</p>
+                <p>Can <strong>rebase</strong> or adjust in extreme market conditions (not truly fixed).</p>
+                <p class="font-semibold">Advantages:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Predictable cost → Good for long-term borrowers</li>
+                    <li>Less exposure to volatility</li>
+                </ul>
+                <p class="font-semibold">Risks:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Slightly <strong>higher upfront</strong> than variable</li>
+                    <li>May be <strong>forced to re-adjust</strong> if protocol conditions require</li>
+                </ul>
+
+                <h3 class="subsection-title">🧠 Developer Insight</h3>
+                <p>In Aave:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Borrowers choose between variable and stable at loan creation.</li>
+                    <li>Switching between the two is allowed (swapBorrowRateMode() function).</li>
+                    <li>Interest accrues in real-time on the borrowed token balance.</li>
+                </ul>
+                <p>In code:</p>
+                <pre><code>
+function borrow(address asset, uint256 amount, uint256 interestRateMode, address onBehalfOf, uint16 referralCode);
+                </code></pre>
+                <p>Where:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>interestRateMode = 1 → Stable</li>
+                    <li>interestRateMode = 2 → Variable</li>
+                </ul>
+
+                <h3 class="subsection-title">📉 Impact on Lending & Borrowing Strategy</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Scenario</th>
+                                <th>Choose Variable</th>
+                                <th>Choose Stable</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Short-term borrowing</td>
+                                <td>✅</td>
+                                <td>❌</td>
+                            </tr>
+                            <tr>
+                                <td>Long-term borrowing</td>
+                                <td>❌</td>
+                                <td>✅</td>
+                            </tr>
+                            <tr>
+                                <td>Expect rates to drop</td>
+                                <td>✅</td>
+                                <td>❌</td>
+                            </tr>
+                            <tr>
+                                <td>Want cost predictability</td>
+                                <td>❌</td>
+                                <td>✅</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">✅ Summary Table</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Term</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Variable Rate</td>
+                                <td>Dynamic rate based on protocol utilization</td>
+                            </tr>
+                            <tr>
+                                <td>Stable Rate</td>
+                                <td>Fixed-like rate that adjusts slowly</td>
+                            </tr>
+                            <tr>
+                                <td>Utilization</td>
+                                <td>Measures demand; higher = higher rates</td>
+                            </tr>
+                            <tr>
+                                <td>Lenders</td>
+                                <td>Earn interest based on borrow rate</td>
+                            </tr>
+                            <tr>
+                                <td>Borrowers</td>
+                                <td>Pay interest based on chosen mode</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Tab Content: Yield Farming -->
+            <section id="yield-farming" class="tab-content">
+                <h2 class="section-title">7. Yield Farming</h2>
+                <h3 class="subsection-title">💬 Simple Definition:</h3>
+                <p>Yield Farming is a DeFi strategy where users <strong>move crypto assets between different protocols</strong> to earn the <strong>highest possible return</strong> (yield) through interest, fees, and token rewards.</p>
+                <p>It’s like “depositing your money into the highest-paying savings account,” but you can frequently switch between protocols to <strong>maximize gains</strong>.</p>
+
+                <h3 class="subsection-title">🔧 How It Works in DeFi:</h3>
+                <p>You deposit assets into a <strong>DeFi protocol</strong> like Aave, Compound, or Curve.</p>
+                <p>In return, you earn <strong>yield</strong> from:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Borrowers (interest)</li>
+                    <li>Trading fees (from DEXs)</li>
+                    <li>Reward tokens (like COMP, AAVE, CRV, etc.)</li>
+                </ul>
+                <p>You can <strong>optimize</strong> returns by:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Moving assets between pools</li>
+                    <li>Stacking rewards (e.g., yield from one protocol + staking reward in another)</li>
+                </ul>
+                <p>Advanced users use <strong>LP tokens</strong>, <strong>staking</strong>, and <strong>layered farming</strong> to compound rewards.</p>
+
+                <h3 class="subsection-title">📦 Example:</h3>
+                <h4 class="text-xl font-medium text-emerald-500">🧪 Strategy 1 – Lending Yield:</h4>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Deposit <strong>USDC</strong> on Compound</li>
+                    <li>Earn <strong>interest</strong> + receive <strong>COMP tokens</strong></li>
+                </ul>
+                <h4 class="text-xl font-medium text-emerald-500">🧪 Strategy 2 – LP Yield:</h4>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Provide <strong>ETH/USDC</strong> liquidity to Uniswap</li>
+                    <li>Earn <strong>trading fees</strong> from users swapping between ETH & USDC</li>
+                    <li>Sometimes also get <strong>UNI token rewards</strong></li>
+                </ul>
+                <h4 class="text-xl font-medium text-emerald-500">🧪 Strategy 3 – Staking LP Tokens:</h4>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Stake your <strong>Uniswap LP tokens</strong> in a <strong>farming contract</strong></li>
+                    <li>Earn <strong>additional token rewards</strong> (like SUSHI, CRV, etc.)</li>
+                </ul>
+
+                <h3 class="subsection-title">📈 Sources of Yield:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Source</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Borrowing Interest</td>
+                                <td>Paid by users borrowing your funds (like Aave, Compound)</td>
+                            </tr>
+                            <tr>
+                                <td>Trading Fees</td>
+                                <td>Earned from AMM swaps (like Uniswap, Curve)</td>
+                            </tr>
+                            <tr>
+                                <td>Reward Tokens</td>
+                                <td>Incentives from the protocol to attract liquidity</td>
+                            </tr>
+                            <tr>
+                                <td>Rebase/Auto-Compounding</td>
+                                <td>Protocols like Yearn auto-optimize your yield</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">🧠 Developer Insight:</h3>
+                <p>Many farming contracts distribute yield via:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>ERC-20 reward tokens</strong> (e.g., CRV, SUSHI)</li>
+                    <li>Tracking <strong>stake balances</strong> and <strong>duration</strong></li>
+                    <li>Use of <strong>vaults</strong> to auto-compound (e.g., Yearn Vaults)</li>
+                </ul>
+                <p>Example: A simple MasterChef (reward distributor) smart contract logic:</p>
+                <pre><code>
+reward = (user.amount * pool.accTokenPerShare - user.rewardDebt);
+                </code></pre>
+                <p>Rewards are distributed proportionally to users’ stakes and pool activity.</p>
+
+                <h3 class="subsection-title">⚠️ Risks of Yield Farming</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Risk Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Impermanent Loss</td>
+                                <td>Loss from volatile LP pairs (covered later)</td>
+                            </tr>
+                            <tr>
+                                <td>Rug Pulls / Exploits</td>
+                                <td>Risk from unaudited or malicious contracts</td>
+                            </tr>
+                            <tr>
+                                <td>Smart Contract Bugs</td>
+                                <td>Bugs in farming or staking logic</td>
+                            </tr>
+                            <tr>
+                                <td>Unsustainable APY</td>
+                                <td>High rewards that collapse over time</td>
+                            </tr>
+                            <tr>
+                                <td>Gas Fees</td>
+                                <td>High cost on Ethereum can eat into yield</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">✅ Summary Table</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Term</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Yield Farming</td>
+                                <td>Maximizing returns by strategically allocating crypto in DeFi</td>
+                            </tr>
+                            <tr>
+                                <td>Reward Tokens</td>
+                                <td>Extra tokens distributed to incentivize liquidity</td>
+                            </tr>
+                            <tr>
+                                <td>LP Tokens</td>
+                                <td>Proof of your deposit in liquidity pools</td>
+                            </tr>
+                            <tr>
+                                <td>Staking</td>
+                                <td>Locking tokens to earn yield</td>
+                            </tr>
+                            <tr>
+                                <td>Vaults</td>
+                                <td>Automated strategies to compound your yield</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Tab Content: Liquidity Pools -->
+            <section id="liquidity-pools" class="tab-content">
+                <h2 class="section-title">8. Liquidity Pools</h2>
+                <h3 class="subsection-title">💬 Simple Definition:</h3>
+                <p>A <strong>Liquidity Pool</strong> is a smart contract that holds <strong>two or more tokens</strong> and allows users to <strong>trade, lend, or borrow</strong> without a traditional order book.</p>
+                <p>Instead of relying on buyers and sellers matching orders (like in centralized exchanges), DeFi uses <strong>automated pools of tokens</strong> to facilitate transactions — maintained by <strong>liquidity providers (LPs)</strong>.</p>
+
+                <h3 class="subsection-title">🔧 How It Works:</h3>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>Liquidity Providers (LPs)</strong> deposit a <strong>pair of tokens</strong> (e.g., ETH + USDC) into a pool.</li>
+                    <li>Traders can <strong>swap tokens</strong> using the pool.</li>
+                    <li>The pool uses an algorithm called an <strong>Automated Market Maker (AMM)</strong> to determine token prices.</li>
+                    <li>Every trade generates a <strong>small fee</strong>, which is distributed to the LPs.</li>
+                    <li>In return, LPs receive <strong>LP tokens</strong>, representing their share in the pool.</li>
+                </ul>
+
+                <h3 class="subsection-title">📦 Example:</h3>
+                <p>Uniswap ETH/USDC Pool:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Alice provides <strong>1 ETH and 2,000 USDC</strong> to a Uniswap V3 pool.</li>
+                    <li>She receives <strong>LP tokens</strong> (like UNI-V2) representing her share.</li>
+                    <li>Bob swaps 500 USDC for ETH → pays a <strong>0.3% fee</strong>.</li>
+                    <li>Alice earns a portion of that fee based on her pool share.</li>
+                </ul>
+
+                <h3 class="subsection-title">⚖️ Pricing Formula (Uniswap v2):</h3>
+                <p>Most AMMs (like Uniswap v2) use the <strong>Constant Product Formula</strong>:</p>
+                <p>X × y = k</p>
+                <p>Where:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>x = amount of token A in the pool</li>
+                    <li>y = amount of token B</li>
+                    <li>k = constant (does not change)</li>
+                </ul>
+                <p>This means:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>When you swap, you <strong>change the ratio</strong> of tokens in the pool</li>
+                    <li>The price adjusts <strong>automatically</strong></li>
+                </ul>
+
+                <h3 class="subsection-title">🧠 Developer Insight:</h3>
+                <p>In Solidity, pools are usually implemented using:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>ERC-20 tokens</li>
+                    <li>Math libraries (for swap & liquidity logic)</li>
+                </ul>
+                <p>Functions like:</p>
+                <pre><code>
+function addLiquidity (...) external;
+function removeLiquidity(...) external;
+function swap(...) external;
+                </code></pre>
+                <p>Uniswap V3 and Curve use <strong>more advanced formulas</strong> (concentrated liquidity, bonding curves).</p>
+
+                <h3 class="subsection-title">🔁 Lifecycle of a Liquidity Pool:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Step</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1. LPs deposit tokens → mint LP tokens</td>
+                            </tr>
+                            <tr>
+                                <td>2. Traders perform swaps via pool</td>
+                            </tr>
+                            <tr>
+                                <td>3. Pool charges fees on trades</td>
+                            </tr>
+                            <tr>
+                                <td>4. LPs earn yield from fees</td>
+                            </tr>
+                            <tr>
+                                <td>5. LPs can withdraw liquidity + rewards</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">⚠️ Risks</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Risk</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Impermanent Loss</td>
+                                <td>Loss from price divergence of token pairs</td>
+                            </tr>
+                            <tr>
+                                <td>Low Liquidity</td>
+                                <td>Can cause large slippage</td>
+                            </tr>
+                            <tr>
+                                <td>Smart Contract Bugs</td>
+                                <td>Vulnerable contracts may lose funds</td>
+                            </tr>
+                            <tr>
+                                <td>Volatility</td>
+                                <td>Unstable prices can affect LP performance</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">✅ Summary Table</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Term</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Liquidity Pool</td>
+                                <td>Smart contract holding tokens for trading/lending</td>
+                            </tr>
+                            <tr>
+                                <td>LP Token</td>
+                                <td>Receipt token representing your pool share</td>
+                            </tr>
+                            <tr>
+                                <td>AMM</td>
+                                <td>Algorithm that prices tokens without an order book</td>
+                            </tr>
+                            <tr>
+                                <td>Swap Fee</td>
+                                <td>Paid by traders, earned by LPs</td>
+                            </tr>
+                            <tr>
+                                <td>Impermanent Loss</td>
+                                <td>Potential loss from providing liquidity in volatile markets</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Tab Content: Impermanent Loss (IL) -->
+            <section id="impermanent-loss" class="tab-content">
+                <h2 class="section-title">9. Impermanent Loss (IL)</h2>
+                <h3 class="subsection-title">💬 Simple Definition:</h3>
+                <p><strong>Impermanent Loss</strong> is the <strong>temporary loss in dollar value</strong> that a liquidity provider experiences compared to simply holding the assets in their wallet — due to <strong>price fluctuations</strong> between the token pairs in a liquidity pool.</p>
+                <p>It only occurs <strong>when you provide liquidity</strong> to a <strong>token pair with changing prices</strong>, and it becomes <strong>"real" when you withdraw your funds</strong>.</p>
+                <h3 class="subsection-title">🔧 How It Works:</h3>
+                <p>You provide two tokens (e.g., ETH and USDC) to a <strong>liquidity pool</strong>.</p>
+                <p>As people trade, the pool's <strong>ratio of tokens</strong> shifts — and <strong>price adjusts</strong> due to the AMM algorithm.</p>
+                <p>If the price of ETH rises, the pool now contains <strong>less ETH and more USDC</strong>, because traders are buying ETH from it.</p>
+                <p>When you withdraw your liquidity, you end up with <strong>fewer of the token that gained value</strong>, resulting in <strong>lower overall value</strong> compared to if you had simply held the tokens. That <strong>gap</strong> is your <strong>impermanent loss</strong>.</p>
+                <h3 class="subsection-title">📦 Example:</h3>
+                <p>You deposit: 1 ETH ($2,000) + 2,000 USDC → Total $4,000</p>
+                <p>ETH price doubles to $4,000</p>
+                <p>Pool rebalances the ratio → you now hold ~0.71 ETH + ~2,828 USDC</p>
+                <p>Even though the total is ~$4,570, <strong>you would’ve had $6,000</strong> if you just held 1 ETH + 2,000 USDC. That <strong>$1,430 gap</strong> is your <strong>impermanent loss</strong>.</p>
+                <h3 class="subsection-title">📈 Impermanent Loss vs Price Change Table:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Price Change (relative)</th>
+                                <th>Impermanent Loss</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1.25×</td>
+                                <td>~0.6%</td>
+                            </tr>
+                            <tr>
+                                <td>1.5×</td>
+                                <td>~2.0%</td>
+                            </tr>
+                            <tr>
+                                <td>2×</td>
+                                <td>~5.7%</td>
+                            </tr>
+                            <tr>
+                                <td>3×</td>
+                                <td>~13.4%</td>
+                            </tr>
+                            <tr>
+                                <td>5×</td>
+                                <td>~25.5%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>This assumes a <strong>50/50 liquidity pool</strong> like Uniswap v2.</p>
+                <h3 class="subsection-title">💡 Why It’s Called “Impermanent”?</h3>
+                <p>It’s <strong>"impermanent"</strong> because the loss only exists <strong>until you withdraw</strong> your funds.</p>
+                <p>If the price <strong>returns to its original level</strong>, there is <strong>no loss</strong>.</p>
+                <p>But if you withdraw while prices are still imbalanced, the loss becomes <strong>permanent</strong>.</p>
+                <h3 class="subsection-title">⚠️ What Makes IL Worse?</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Factor</th>
+                                <th>Impact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>High volatility</td>
+                                <td>Bigger divergence = bigger IL</td>
+                            </tr>
+                            <tr>
+                                <td>Unequal price change</td>
+                                <td>The more one token gains, the worse IL gets</td>
+                            </tr>
+                            <tr>
+                                <td>Withdrawing at wrong time</td>
+                                <td>Locks in the loss</td>
+                            </tr>
+                            <tr>
+                                <td>50/50 pools</td>
+                                <td>Most affected (vs stable pairs like USDC/DAI)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3 class="subsection-title">🧠 Developer Insight:</h3>
+                <p>Impermanent loss is <strong>not directly tracked</strong> in smart contracts — it's inferred from:</p>
+                <p class="text-center">IL = HODL value - Withdrawn value</p>
+                <p>Protocols like Uniswap don’t compensate IL — but some like <strong>Bancor</strong> or <strong>Balancer</strong> may offer <strong>IL protection</strong> or use different weight pools (e.g., 80/20 pools).</p>
+                <h3 class="subsection-title">✅ Summary Table</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Term</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Impermanent Loss</td>
+                                <td>Loss from price divergence when providing liquidity</td>
+                            </tr>
+                            <tr>
+                                <td>Cause</td>
+                                <td>AMM automatically sells one asset as prices shift</td>
+                            </tr>
+                            <tr>
+                                <td>When Realized</td>
+                                <td>When LP removes liquidity</td>
+                            </tr>
+                            <tr>
+                                <td>Best Pools to Avoid IL</td>
+                                <td>Stablecoin pairs (e.g., USDC/DAI)</td>
+                            </tr>
+                            <tr>
+                                <td>Protection</td>
+                                <td>Some protocols offer IL insurance or asymmetric pools</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Tab Content: TVL (Total Value Locked) -->
+            <section id="tvl" class="tab-content">
+                <h2 class="section-title">10. TVL (Total Value Locked)</h2>
+                <h3 class="subsection-title">💬 Simple Definition:</h3>
+                <p><strong>TVL (Total Value Locked)</strong> refers to the <strong>total dollar value of assets</strong> that are <strong>currently deposited (locked)</strong> in a DeFi protocol’s smart contracts — such as lending pools, staking vaults, and liquidity pools.</p>
+                <p>It measures how much <strong>crypto capital is being used</strong> in the protocol.</p>
+                <h3 class="subsection-title">🔧 What Does It Measure?</h3>
+                <p>TVL is a <strong>real-time snapshot</strong> of:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>The <strong>trust and popularity</strong> of a DeFi protocol</li>
+                    <li>The <strong>liquidity and capital efficiency</strong> available in that system</li>
+                    <li>How much value users are willing to stake, lend, or provide</li>
+                </ul>
+                <p>The higher the TVL, the <strong>more funds are at work</strong>, and the <strong>more secure</strong> or <strong>valuable</strong> the protocol may appear.</p>
+                <h3 class="subsection-title">🧮 Formula:</h3>
+                <p>Includes:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Lending deposits (e.g., ETH, DAI)</li>
+                    <li>Staked tokens</li>
+                    <li>Liquidity pool assets</li>
+                    <li>Collateral backing stablecoins (like DAI in MakerDAO)</li>
+                </ul>
+                <h3 class="subsection-title">📦 Examples:</h3>
+                <p>Aave:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Users deposit USDC, ETH, DAI into lending pools.</li>
+                    <li>The total value of all deposits = <strong>TVL</strong>.</li>
+                </ul>
+                <p>Uniswap:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Users provide ETH/USDC liquidity.</li>
+                    <li>The combined value of all token pairs in all pools = <strong>TVL</strong>.</li>
+                </ul>
+                <p>MakerDAO:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>TVL = Total collateral (ETH, wBTC, etc.) locked to mint DAI.</li>
+                </ul>
+                <h3 class="subsection-title">📈 Where to Track TVL:</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Platform</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>DeFiLlama</td>
+                                <td>Multi-chain TVL dashboard</td>
+                            </tr>
+                            <tr>
+                                <td>DappRadar</td>
+                                <td>TVL + user analytics</td>
+                            </tr>
+                            <tr>
+                                <td>Token Terminal</td>
+                                <td>TVL + revenue + P/E analysis</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3 class="subsection-title">📊 Why Is TVL Important?</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Why It Matters</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>🏦 Liquidity</td>
+                                <td>High TVL = easier trading, borrowing, lending</td>
+                            </tr>
+                            <tr>
+                                <td>🛡 Security</td>
+                                <td>More funds = more battle-tested contracts</td>
+                            </tr>
+                            <tr>
+                                <td>📊 Market Confidence</td>
+                                <td>Attracts developers, investors, and yield farmers</td>
+                            </tr>
+                            <tr>
+                                <td>⚠️ Overvalued TVL?</td>
+                                <td>High TVL doesn't always mean protocol is profitable</td>
+                            </tr>
+                            <tr>
+                                <td>🧮 Protocol Valuation</td>
+                                <td>Often used with token price for metrics like TVL/MC</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3 class="subsection-title">🧠 Developer Insight:</h3>
+                <p>TVL is not always stored on-chain — it’s calculated off-chain by aggregators using on-chain <strong>ERC-20 balances</strong>, <strong>liquidity pool sizes</strong>, <strong>staking vaults</strong>, etc.</p>
+                <p>Some protocols may <strong>inflate TVL</strong> via incentives or <strong>double-counting</strong> (e.g., staking LP tokens elsewhere).</p>
+                <h3 class="subsection-title">✅ Summary Table</h3>
+                <div class="table-container card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Term</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>TVL</td>
+                                <td>Total dollar value of crypto locked in a DeFi protocol</td>
+                            </tr>
+                            <tr>
+                                <td>Includes</td>
+                                <td>Lending pools, staked assets, liquidity pools</td>
+                            </tr>
+                            <tr>
+                                <td>Used For</td>
+                                <td>Tracking adoption, liquidity, protocol health</td>
+                            </tr>
+                            <tr>
+                                <td>Tracked By</td>
+                                <td>DeFiLlama, Token Terminal, DappRadar</td>
+                            </tr>
+                            <tr>
+                                <td>Caveats</td>
+                                <td>Can be manipulated, not the only health metric</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white p-6 text-center mt-auto shadow-inner">
+        <p>&copy; 2025 DeFi Concepts. All rights reserved.</p>
+        <p class="text-sm mt-2">Created by R.M.N.K. Rathnayake</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabButtonsContainer = document.getElementById('tab-buttons');
+            const tabButtons = tabButtonsContainer.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            // Function to show a specific tab
+            const showTab = (tabId) => {
+                // Hide all tab contents
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                });
+
+                // Deactivate all tab buttons
+                tabButtons.forEach(button => {
+                    button.classList.remove('active-tab-button');
+                    button.classList.add('text-gray-700', 'hover:bg-emerald-100', 'hover:text-emerald-700');
+                });
+
+                // Show the selected tab content
+                const selectedTabContent = document.getElementById(tabId);
+                if (selectedTabContent) {
+                    selectedTabContent.classList.add('active');
+                }
+
+                // Activate the corresponding tab button
+                const selectedTabButton = document.querySelector(`.tab-button[data-tab="${tabId}"]`);
+                if (selectedTabButton) {
+                    selectedTabButton.classList.add('active-tab-button');
+                    selectedTabButton.classList.remove('text-gray-700', 'hover:bg-emerald-100', 'hover:text-emerald-700');
+                }
+            };
+
+            // Add click event listeners to tab buttons
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.dataset.tab;
+                    showTab(tabId);
+                });
+            });
+
+            // Show the first tab by default on load
+            if (tabButtons.length > 0) {
+                showTab(tabButtons[0].dataset.tab);
+            }
+        });
+    </script>
+</body>
+</html>

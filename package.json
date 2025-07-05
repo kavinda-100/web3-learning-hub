@@ -1,0 +1,21 @@
+{
+  "name": "web3-learning-hub",
+  "version": "1.0.0",
+  "description": "This is a web application for learning web3 concepts",
+  "license": "MIT",
+  "author": "kavinda rathnayake",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.0.1",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
