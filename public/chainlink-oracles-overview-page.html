@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chainlink Oracles Overview</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+
+        /* Consistent spacing for paragraphs, headings, and lists */
+        p {
+            margin-bottom: 1rem; /* Consistent spacing for paragraphs */
+        }
+        ul:not(.space-y-2):not(.list-none), ol { /* Target actual content lists, not navigation or custom lists */
+            margin-bottom: 1rem; /* Consistent spacing for lists */
+            padding-left: 1.5rem; /* Indent lists */
+        }
+        ul.list-none .list-item div {
+            margin-bottom: 0; /* Handled by .list-item margin-bottom */
+        }
+        /* Specific overrides for nested lists or elements that already have spacing */
+        ul.list-disc ul.list-disc, ol.list-decimal ul.list-disc {
+            margin-top: 0.5rem; /* Small margin for nested lists */
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 800; /* font-extrabold */
+            color: #0891b2; /* cyan-700 */
+            margin-bottom: 2.5rem; /* Consistent spacing */
+            border-bottom: 2px solid #67e8f9; /* border-b-2 cyan-300 */
+            padding-bottom: 0.5rem; /* pb-2 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #06b6d4; /* cyan-600 */
+            margin-top: 2rem; /* Consistent spacing */
+            margin-bottom: 1rem; /* Consistent spacing */
+        }
+        .card {
+            background-color: #ffffff; /* bg-white */
+            padding: 1.5rem; /* p-6 */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+            transition: box-shadow 300ms ease-in-out; /* transition-shadow duration-300 */
+        }
+        .card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* hover:shadow-lg */
+        }
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 1rem; /* Consistent spacing below tables */
+        }
+        table {
+            width: 100%;
+            text-align: left;
+            border-collapse: collapse;
+            border: 1px solid #d1d5db; /* Explicit border for the whole table */
+        }
+        th, td {
+            padding: 0.75rem 1rem; /* py-3 px-4 */
+            border: 1px solid #d1d5db; /* Explicit borders for cells */
+        }
+        th {
+            background-color: #ecfeff; /* bg-cyan-50 */
+            color: #0e7490; /* text-cyan-800 */
+            font-weight: 500; /* font-medium */
+        }
+        td {
+            color: #374151; /* text-gray-700 */
+        }
+        .list-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 0.5rem; /* Consistent spacing for list items */
+        }
+        .list-icon {
+            color: #06b6d4; /* text-cyan-500 */
+            margin-right: 0.75rem; /* mr-3 */
+            font-size: 1.25rem; /* text-xl */
+        }
+        /* Styles for tab buttons */
+        .tab-button {
+            display: block;
+            padding: 0.5rem 1rem; /* py-2 px-4 */
+            border-radius: 0.375rem; /* rounded-md */
+            color: #4b5563; /* text-gray-700 */
+            transition: background-color 200ms ease-in-out, color 200ms ease-in-out; /* transition-colors duration-200 */
+            cursor: pointer;
+        }
+        .tab-button:hover {
+            background-color: #e0f7fa; /* hover:bg-cyan-100 */
+            color: #06b6d4; /* hover:text-cyan-700 */
+        }
+        .active-tab-button {
+            background-color: #06b6d4; /* bg-cyan-600 */
+            color: #ffffff; /* text-white */
+        }
+        .active-tab-button:hover {
+            background-color: #0891b2; /* hover:bg-cyan-700 */
+        }
+        /* Hide tab content by default */
+        .tab-content {
+            display: none;
+            margin-bottom: 2.5rem; /* Consistent spacing below each tab section */
+        }
+        /* Ensure active tab content is shown */
+        .tab-content.active {
+            display: block;
+        }
+        pre {
+            background-color: #2d2d2d; /* Dark background for code */
+            color: #f8f8f2; /* Light text for code */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 0.9em;
+            line-height: 1.4;
+            margin-bottom: 1rem; /* Consistent spacing below code blocks */
+        }
+        .diagram-container {
+            text-align: center;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        .diagram-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-cyan-600 to-blue-600 text-white p-6 shadow-lg">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <h1 class="text-4xl font-extrabold mb-2 md:mb-0">Chainlink Oracles Overview</h1>
+            <p class="text-lg">Connecting Blockchains to the Real World</p>
+        </div>
+    </header>
+
+    <div class="flex flex-1 container mx-auto p-6">
+        <!-- Sidebar Navigation (Tabs) -->
+        <nav class="w-1/4 pr-6 hidden md:block">
+            <div class="bg-white p-6 rounded-lg shadow-md sticky top-6">
+                <h2 class="text-xl font-bold mb-4 text-cyan-700">Table of Contents</h2>
+                <ul class="space-y-2" id="tab-buttons">
+                    <li><button class="tab-button active-tab-button" data-tab="what-is-chainlink">What is Chainlink?</button></li>
+                    <li><button class="tab-button" data-tab="how-chainlink-works">How Chainlink Works</button></li>
+                    <li><button class="tab-button" data-tab="chainlink-services">Chainlink Services</button></li>
+                    <li><button class="tab-button" data-tab="real-world-use">Real-world Use Cases</button></li>
+                    <li><button class="tab-button" data-tab="link-token">The LINK Token</button></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content (Tab Panels) -->
+        <main class="w-full md:w-3/4 bg-white p-8 rounded-lg shadow-xl">
+            <!-- Tab Content: What is Chainlink? -->
+            <section id="what-is-chainlink" class="tab-content active">
+                <h2 class="section-title">What is Chainlink?</h2>
+                <p>Chainlink is a <strong>decentralized oracle network (DON)</strong> that provides smart contracts with off-chain and cross-chain data and computations in a reliable, secure, and decentralized manner. It was created to solve the “oracle problem,” which refers to the challenge of getting off-chain data into a blockchain in a secure, trust-minimized, scalable, and decentralized manner, as we learned in the previous lesson.</p>
+                <p>Chainlink does this using a similar model to a blockchain–there is a decentralized network of independent operators (oracle nodes) that retrieve data from multiple sources. This data is then aggregated, and a single aggregated data point is delivered on-chain.</p>
+
+                <h3 class="subsection-title">Chainlink has become the most widely used DON because it addresses the key challenges of connecting blockchains to external information:</h3>
+                <h4 class="text-xl font-medium text-cyan-500">1. The Trust Problem</h4>
+                <p class="font-semibold">Challenge:</p>
+                <p>How can a blockchain trust information from the outside world?</p>
+                <p class="font-semibold">Chainlink's Solution:</p>
+                <p>Instead of relying on a single source of information, Chainlink uses a network of independent operators (called <strong>nodes</strong>) that each collects data. These nodes compare their findings and reach consensus on the correct answer. These nodes work together to form the Chainlink Decentralized Oracle Network, referred to as the DON.</p>
+                <p class="font-semibold">Analogy:</p>
+                <p>Rather than trusting a single weather reporter, imagine getting weather reports from 10 different meteorologists and going with what the majority says.</p>
+
+                <h4 class="text-xl font-medium text-cyan-500">2. The Accuracy Problem</h4>
+                <p class="font-semibold">Challenge:</p>
+                <p>How can we ensure the data is accurate?</p>
+                <p class="font-semibold">Chainlink's Solution:</p>
+                <p>Chainlink carefully selects data sources, verifies the reputation of nodes, and uses cryptographic signatures to prove who provided what information.</p>
+                <p class="font-semibold">Analogy:</p>
+                <p>Like checking a journalist's sources and past reporting history before trusting their news story.</p>
+
+                <h4 class="text-xl font-medium text-cyan-500">3. The Reliability Problem</h4>
+                <p class="font-semibold">Challenge:</p>
+                <p>What happens if a data source goes down?</p>
+                <p class="font-semibold">Chainlink's Solution:</p>
+                <p>By using multiple independent nodes and data sources, Chainlink ensures the system keeps running even if some participants fail.</p>
+                <p class="font-semibold">Analogy:</p>
+                <p>If you're waiting for an important package, the postal service doesn't rely on a single delivery person—if someone calls in sick, another carrier covers their route.</p>
+            </section>
+
+            <!-- Tab Content: How Chainlink Works -->
+            <section id="how-chainlink-works" class="tab-content">
+                <h2 class="section-title">How Chainlink Works</h2>
+                <ol class="list-decimal list-inside ml-4">
+                    <li><strong>Request:</strong> A smart contract asks for specific information (like the current price of gold or a verifiably random number), computation, or cross-chain communication.</li>
+                    <li><strong>Assignment:</strong> Chainlink selects a group of trusted nodes to fulfill this request.</li>
+                    <li><strong>Data Collection:</strong> Each node independently gathers the requested information from reliable sources.</li>
+                    <li><strong>Consensus:</strong> The nodes compare their answers and agree on the correct value.</li>
+                    <li><strong>Delivery:</strong> The verified information is delivered back to the smart contract.</li>
+                    <li><strong>Payment:</strong> The nodes receive LINK tokens (Chainlink's cryptocurrency) as payment for their service.</li>
+                </ol>
+                <div class="diagram-container">
+                    <img src="https://placehold.co/600x300/e0f7fa/06b6d4?text=Chainlink+How+It+Works+Flow" alt="Chainlink How It Works Flow Diagram">
+                    <p class="text-gray-600 text-sm mt-2">Diagram illustrating the Chainlink request-response flow.</p>
+                </div>
+            </section>
+
+            <!-- Tab Content: Chainlink Services -->
+            <section id="chainlink-services" class="tab-content">
+                <h2 class="section-title">Chainlink Services</h2>
+
+                <h3 class="subsection-title">Data and Price Feeds</h3>
+                <p class="font-semibold">What they do:</p>
+                <p>Provide data on-chain, such as price information for cryptocurrencies, commodities, foreign exchange rates, etc.</p>
+                <p class="font-semibold">How they work:</p>
+                <p>Networks of nodes collect price data from multiple exchanges and data providers, then aggregate them to determine the most accurate price at a certain time interval or when certain conditions are met.</p>
+                <p class="font-semibold">Real-world use:</p>
+                <p>When you use a DeFi platform that needs to know the current ETH/USD price, it's likely using Chainlink Price Feeds.</p>
+
+                <h3 class="subsection-title">Automation (formerly Keepers)</h3>
+                <p class="font-semibold">What it does:</p>
+                <p>Allows smart contracts to be automatically triggered when certain conditions are met.</p>
+                <p class="font-semibold">How it works:</p>
+                <p>Chainlink nodes monitor conditions and execute functions when predefined criteria are satisfied.</p>
+                <p class="font-semibold">Real-world use:</p>
+                <p>Automatically liquidating collateral in lending platforms when values drop below required thresholds.</p>
+
+                <h3 class="subsection-title">Cross-Chain Interoperability Protocol (CCIP)</h3>
+                <p class="font-semibold">What it does:</p>
+                <p>Enables secure communication between different blockchains.</p>
+                <p class="font-semibold">How it works:</p>
+                <p>Creates a way for smart contracts on one blockchain to send messages and tokens to another blockchain in a secure and decentralized way.</p>
+                <p class="font-semibold">Real-world use:</p>
+                <p>Send tokens from Ethereum to Polygon or have a smart contract on one chain trigger an action on another chain.</p>
+
+                <h3 class="subsection-title">Chainlink Functions</h3>
+                <p class="font-semibold">What it does:</p>
+                <p>Allows developers to run custom computations off-chain and bring the results onto the blockchain.</p>
+                <p class="font-semibold">How it works:</p>
+                <p>Executes custom code in a secure environment and delivers verified results to smart contracts.</p>
+                <p class="font-semibold">Real-world use:</p>
+                <p>Complex calculations that would be too expensive to run directly on the blockchain.</p>
+                <p class="text-gray-600 text-sm">Note: This is <strong>completely</strong> separate from the functions on a smart contract. Chainlink Functions is a Chainlink service. To avoid confusion:</p>
+                <ul class="list-disc list-inside ml-4 text-gray-600 text-sm">
+                    <li>If you see the word "Functions" with a capital "F", we are usually referring to the Chainlink service (unless it's the start of a sentence).</li>
+                    <li>Additionally, where possible, it will be prepended with "Chainlink" if we are referring to the service.</li>
+                </ul>
+
+                <h3 class="subsection-title">Verifiable Random Function (VRF)</h3>
+                <p class="font-semibold">What it does:</p>
+                <p>Generates provably fair and verifiable random numbers that cannot be manipulated or predicted.</p>
+                <p class="font-semibold">How it works:</p>
+                <p>Uses cryptographic techniques to create random numbers that come with proof they were generated fairly.</p>
+                <p class="font-semibold">Real-world use:</p>
+                <p>NFT projects use VRF to fairly distribute random traits or select winners for giveaways.</p>
+
+                <h3 class="subsection-title">Data Streams</h3>
+                <p class="font-semibold">What it does:</p>
+                <p>Provide on-demand access to high-frequency, low-latency market data, delivered off-chain and verifiable on-chain.</p>
+                <p class="font-semibold">How it works:</p>
+                <p>Data streams use a pull-based design that supports sub-second data resolution for latency-sensitive use cases by retrieving data only when needed.</p>
+                <p class="font-semibold">Real-world use:</p>
+                <p>High-frequency price updates for apps like predictions markets that enable participants to react quickly to events and provide accurate settlements.</p>
+
+                <h3 class="subsection-title">Proof of Reserve</h3>
+                <p class="font-semibold">What it does:</p>
+                <p>Verifies that tokenized assets (like stablecoins) are actually backed by real-world reserves.</p>
+                <p class="font-semibold">How it works:</p>
+                <p>Regularly checks and confirms that the claimed backing assets exist in the reported amounts.</p>
+                <p class="font-semibold">Real-world use:</p>
+                <p>Stablecoin issuers can prove they have the money backing their tokens.</p>
+            </section>
+
+            <!-- Tab Content: Real-world Use Cases -->
+            <section id="real-world-use" class="tab-content">
+                <h2 class="section-title">Real-world Use Cases</h2>
+
+                <h3 class="subsection-title">DeFi (Decentralized Finance)</h3>
+                <p class="font-semibold">Price Feeds:</p>
+                <p>Most major lending and trading platforms use Chainlink to get accurate price information for cryptocurrencies and other assets.</p>
+                <p class="font-semibold">Example:</p>
+                <p>When you take out a crypto loan on Aave or trade on Uniswap, Chainlink price feeds help determine fair values and prevent exploitation.</p>
+
+                <h3 class="subsection-title">Gaming</h3>
+                <p class="font-semibold">Verifiable Randomness:</p>
+                <p>Chainlink provides unpredictable, tamper-proof random numbers for fair gameplay and NFT distribution.</p>
+                <p class="font-semibold">Example:</p>
+                <p>When a game needs to randomly select a winner or distribute random traits to NFT characters, Chainlink ensures no one can manipulate the outcome.</p>
+            </section>
+
+            <!-- Tab Content: The LINK Token -->
+            <section id="link-token" class="tab-content">
+                <h2 class="section-title">The LINK Token: Fueling the Network</h2>
+                <p>The LINK token is Chainlink's cryptocurrency that serves several important functions:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>Payment:</strong> Chainlink node operators receive LINK tokens as payment for providing data services.</li>
+                    <li><strong>Security Deposit:</strong> Nodes often need to stake LINK tokens as collateral, giving them skin in the game to be honest.</li>
+                </ul>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white p-6 text-center mt-auto shadow-inner">
+        <p>&copy; 2025 Chainlink Oracles Overview. All rights reserved.</p>
+        <p class="text-sm mt-2">Created by R.M.N.K. Rathnayake</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabButtonsContainer = document.getElementById('tab-buttons');
+            const tabButtons = tabButtonsContainer.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            // Function to show a specific tab
+            const showTab = (tabId) => {
+                // Hide all tab contents
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                });
+
+                // Deactivate all tab buttons
+                tabButtons.forEach(button => {
+                    button.classList.remove('active-tab-button');
+                    button.classList.add('text-gray-700', 'hover:bg-cyan-100', 'hover:text-cyan-700');
+                });
+
+                // Show the selected tab content
+                const selectedTabContent = document.getElementById(tabId);
+                if (selectedTabContent) {
+                    selectedTabContent.classList.add('active');
+                }
+
+                // Activate the corresponding tab button
+                const selectedTabButton = document.querySelector(`.tab-button[data-tab="${tabId}"]`);
+                if (selectedTabButton) {
+                    selectedTabButton.classList.add('active-tab-button');
+                    selectedTabButton.classList.remove('text-gray-700', 'hover:bg-cyan-100', 'hover:text-cyan-700');
+                }
+            };
+
+            // Add click event listeners to tab buttons
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.dataset.tab;
+                    showTab(tabId);
+                });
+            });
+
+            // Show the first tab by default on load
+            if (tabButtons.length > 0) {
+                showTab(tabButtons[0].dataset.tab);
+            }
+        });
+    </script>
+</body>
+</html>
