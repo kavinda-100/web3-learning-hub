@@ -26,6 +26,9 @@ app.get("/erc-tokens", (req, res) => {
 app.get("/defi-overview", (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'defi-overview-page.html'));
 });
+app.get("/chainlink-oracles-overview", (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'chainlink-oracles-overview-page.html'));
+});
 
 // 404 handler - must be last
 app.use((req, res) => {
@@ -35,7 +38,7 @@ app.use((req, res) => {
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('Something broke!');
+  res.status(500).send('Internal Server Error');
 });
 
 
